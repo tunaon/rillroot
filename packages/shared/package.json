@@ -1,12 +1,13 @@
 {
-  "name": "@repo/api",
+  "name": "@rillroot/shared",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
   "scripts": {
     "dev": "pnpm build --watch",
     "build": "tsc -b -v",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\""
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "check-types": "tsc --noEmit"
   },
   "main": "./dist/entry.js",
   "types": "./dist/entry.d.ts",
@@ -30,11 +31,12 @@
     "@nestjs/mapped-types": "*"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.10.7",
+    "@rillroot/eslint-config": "workspace:*",
+    "@rillroot/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.2",
-    "typescript": "5.5.4"
+    "typescript": "catalog:"
   }
 }
