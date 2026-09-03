@@ -1,0 +1,11 @@
+{
+  "extends": "@rillroot/typescript-config/nestjs.json",
+  "compilerOptions": {
+    "incremental": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

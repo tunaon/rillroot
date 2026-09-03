@@ -1,0 +1,32 @@
+{
+  "name": "@rillroot/supabase",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "db:gen-types": "supabase gen types --lang=typescript --linked > src/database.types.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.5",
+    "@supabase/supabase-js": "^2.112.4"
+  },
+  "devDependencies": {
+    "@rillroot/eslint-config": "workspace:*",
+    "@rillroot/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "supabase": "^2.116.0",
+    "typescript": "catalog:"
+  }
+}
