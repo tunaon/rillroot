@@ -1,3 +1,17 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - apps/*
+  - packages/*
+
+catalog:
+  eslint: ^9.39.2
+  typescript: ^5.9.3
+  '@types/node': 22.20.1
+  react: ^19.1.0
+  react-dom: ^19.1.1
+  '@types/react': 19.1.0
+  '@types/react-dom': 19.1.1
+  prettier: ^3.5.3
+  zod: ^4.5.4
+  tailwindcss: ^4.3.3
+  '@tailwindcss/postcss': ^4.3.3
+  lucide-react: ^1.39.0
