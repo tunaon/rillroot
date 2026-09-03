@@ -1,0 +1,15 @@
+{
+  "home": {},
+  "common": {
+    "loading": "Cargando...",
+    "home": "Inicio"
+  },
+  "health": {
+    "healthCheck": "Estado del sistema",
+    "apiConnectionFailed": "No se pudo conectar con la API",
+    "api": "API",
+    "database": "Database",
+    "app": "Aplicación",
+    "time": "Hora"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "home": {},
+  "common": {
+    "loading": "Loading...",
+    "home": "Home"
+  },
+  "health": {
+    "healthCheck": "Health check",
+    "apiConnectionFailed": "Failed to connect to the API",
+    "api": "API",
+    "database": "Database",
+    "app": "App",
+    "time": "Time"
+  }
+}

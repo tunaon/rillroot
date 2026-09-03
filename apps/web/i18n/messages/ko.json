@@ -1,0 +1,15 @@
+{
+  "home": {},
+  "common": {
+    "loading": "불러오는 중...",
+    "home": "홈"
+  },
+  "health": {
+    "healthCheck": "헬스 체크",
+    "apiConnectionFailed": "API 연결에 실패했습니다",
+    "api": "API",
+    "database": "Database",
+    "app": "앱",
+    "time": "시각"
+  }
+}
