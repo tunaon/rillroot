@@ -21,6 +21,9 @@ export type Database = {
           display_name: string
           handle: string
           id: string
+          last_country: string | null
+          last_provider: string | null
+          last_signed_in_at: string | null
           updated_at: string
         }
         Insert: {
@@ -29,6 +32,9 @@ export type Database = {
           display_name: string
           handle: string
           id: string
+          last_country?: string | null
+          last_provider?: string | null
+          last_signed_in_at?: string | null
           updated_at?: string
         }
         Update: {
@@ -37,6 +43,9 @@ export type Database = {
           display_name?: string
           handle?: string
           id?: string
+          last_country?: string | null
+          last_provider?: string | null
+          last_signed_in_at?: string | null
           updated_at?: string
         }
         Relationships: []
