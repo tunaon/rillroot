@@ -39,6 +39,81 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* 등장 모션 토큰. animate-* / ease-* 유틸리티로 노출된다. */
+@theme {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --animate-rise-in: rise-in 0.6s var(--ease-out-expo) both;
+  --animate-slide-l: slide-l 0.92s var(--ease-out-expo) both;
+  --animate-slide-r: slide-r 0.95s var(--ease-out-expo) both;
+  --animate-pop-in: pop-in 0.7s var(--ease-out-expo) both;
+  --animate-grow-y: grow-y 0.5s var(--ease-out-expo) both;
+  --animate-wipe-right: wipe-right 0.8s var(--ease-out-expo) both;
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes slide-l {
+    from {
+      opacity: 0;
+      transform: translateX(-26px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes slide-r {
+    from {
+      opacity: 0;
+      transform: translateX(30px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.7);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes grow-y {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes wipe-right {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -101,20 +176,116 @@
 }
 
 @layer base {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0s;
+    }
+  }
+
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    @apply border-border outline-ring/50;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    /* border 축약형은 border-color 를 currentcolor 로 되돌리므로 @apply 보다 앞에 둔다 */
     border: 0;
+    @apply border-border outline-ring/50;
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Show scrollbar */
+  .scrollbar-visible::-webkit-scrollbar {
+    width: 4px;
+    display: block;
+  }
+  .scrollbar-visible::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-visible::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+  .scrollbar-visible {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+}
+
+/* liquid glass 표면. foreground 를 옅게 섞어 dark 에선 밝아지고 light 에선 어두워진다.
+ * 4-stop 그라디언트는 from/via/to 로 표현할 수 없어 유틸리티로 둔다. */
+@utility glass-panel {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-foreground) 6%, transparent) 0%,
+    color-mix(in oklab, var(--color-foreground) 6.5%, transparent) 13%,
+    color-mix(in oklab, var(--color-foreground) 4.8%, transparent) 34%,
+    color-mix(in oklab, var(--color-foreground) 4.5%, transparent) 100%
+  );
+  backdrop-filter: blur(18px) saturate(115%);
+}
+
+@utility glass-card {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-foreground) 9%, transparent) 0%,
+    color-mix(in oklab, var(--color-foreground) 12.5%, transparent) 24%,
+    color-mix(in oklab, var(--color-foreground) 12%, transparent) 78%,
+    color-mix(in oklab, var(--color-foreground) 10.5%, transparent) 100%
+  );
+  backdrop-filter: blur(26px) saturate(118%);
+}
+
+/* 등장 안무의 코다: 표면 위를 한 번 스치는 사선 광택 */
+@utility sheen {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 38%;
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      color-mix(in oklab, var(--color-foreground) 14%, transparent) 50%,
+      transparent 100%
+    );
+    animation: sheen 1.55s var(--ease-soft) 2.55s 1 both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      display: none;
+    }
+  }
+}
+
+/* skewX(-18deg) 는 띠의 윗변을 tan(18°)·(높이/2) 만큼 오른쪽으로, 아랫변을 같은 양만큼
+ * 왼쪽으로 민다. 이동량은 띠 자신의 너비(카드의 38%) 기준이라 카드가 높을수록 그 삼각형이
+ * 양 끝에서 카드 안으로 더 많이 삐져나온다. animation-fill-mode: both 때문에 지연 구간
+ * 내내 from 위치가 보이므로 시작 값도 끝 값만큼 여유가 필요하다.
+ * -250%/400% 는 카드 높이 2000px 까지 좌상단·우하단 모두 카드 밖에 두는 값이다. */
+@keyframes sheen {
+  from {
+    transform: translate3d(-250%, 0, 0) skewX(-18deg);
+  }
+  to {
+    transform: translate3d(400%, 0, 0) skewX(-18deg);
   }
 }

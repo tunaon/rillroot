@@ -11,5 +11,26 @@
     "database": "Database",
     "app": "アプリ",
     "time": "時刻"
+  },
+  "auth": {
+    "signIn": "ログイン",
+    "signOut": "ログアウト",
+    "title": "Rillrootにログイン",
+    "google": "Googleで続行",
+    "or": "または",
+    "emailPlaceholder": "メールアドレスを入力",
+    "codeTitle": "認証コードを入力",
+    "codeSentTo": "<strong>{email}</strong> に送信した6桁のコードを入力してください。",
+    "resend": "コードを再送信",
+    "resendIn": "コードを再送信 ({seconds}秒)",
+    "changeEmail": "別のメールアドレスを使う",
+    "noEmail": "メールが届きませんか？",
+    "submit": "送信",
+    "close": "閉じる",
+    "errors": {
+      "expiredCode": "コードが正しくないか、有効期限が切れています。新しいコードを取得してください。",
+      "tooManyRequests": "しばらくしてからもう一度お試しください。",
+      "generic": "問題が発生しました。もう一度お試しください。"
+    }
   }
 }

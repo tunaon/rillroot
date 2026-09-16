@@ -11,5 +11,26 @@
     "database": "Database",
     "app": "앱",
     "time": "시각"
+  },
+  "auth": {
+    "signIn": "로그인",
+    "signOut": "로그아웃",
+    "title": "Rillroot에 로그인",
+    "google": "Google로 계속하기",
+    "or": "또는",
+    "emailPlaceholder": "이메일을 입력하세요",
+    "codeTitle": "인증 코드 입력",
+    "codeSentTo": "<strong>{email}</strong> 주소로 보낸 6자리 코드를 입력하세요.",
+    "resend": "코드 다시 보내기",
+    "resendIn": "코드 다시 보내기 ({seconds}초)",
+    "changeEmail": "다른 이메일 사용",
+    "noEmail": "메일을 받지 못하셨나요?",
+    "submit": "확인",
+    "close": "닫기",
+    "errors": {
+      "expiredCode": "코드가 올바르지 않거나 만료되었습니다. 새 코드를 받아주세요.",
+      "tooManyRequests": "잠시 후 다시 시도해주세요.",
+      "generic": "문제가 발생했습니다. 다시 시도해주세요."
+    }
   }
 }

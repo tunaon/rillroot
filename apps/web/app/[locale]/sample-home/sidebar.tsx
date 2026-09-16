@@ -1,0 +1,241 @@
+'use client';
+
+import { cn } from '@rillroot/ui/lib/utils';
+import {
+  ChartColumn,
+  ChartColumnBig,
+  ChevronsLeft,
+  Egg,
+  EggFried,
+  FlaskConical,
+  type LucideIcon,
+  Plus,
+  User,
+} from 'lucide-react';
+import { useLayoutEffect, useRef, useState } from 'react';
+import BrandStack from './brand-stack';
+import ComposerDialog from './composer-dialog';
+import HamburgerToggle from './hamburger-toggle';
+
+const FOCUS =
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+
+// 접힘(data-collapsed)과 모바일 독(max-lg)은 같은 아이콘 전용 형태를 공유한다.
+// 활성 배경은 lg 에서는 미끄러지는 플레이트가 그리고, 모바일 독에서만 링크 자신이 그린다.
+const NAV_LINK = `relative flex h-11 items-center gap-3 rounded-xl text-base font-medium text-muted-foreground transition-[background-color,color,translate,scale] duration-220 ease-soft hover:-translate-y-px hover:bg-foreground/8 hover:text-foreground active:scale-[.97] aria-[current=page]:font-semibold aria-[current=page]:text-foreground max-lg:w-11 max-lg:justify-center max-lg:aria-[current=page]:bg-foreground/12 lg:px-3 group-data-collapsed:w-11 group-data-collapsed:justify-center group-data-collapsed:px-0 animate-rise-in motion-reduce:animate-none ${FOCUS}`;
+
+const LABEL = 'max-lg:hidden group-data-collapsed:hidden';
+
+// 활성 항목을 따라 top 이 바뀌는 인디케이터. 값은 useLayoutEffect 에서 측정해 인라인으로 쓴다.
+const INDICATOR =
+  'invisible absolute transition-[top] duration-300 ease-out-expo motion-reduce:transition-none max-lg:hidden';
+
+type NavItem = {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  // 활성일 때만 다른 아이콘을 쓰는 항목이 있다. 없으면 icon 을 그대로 쓴다.
+  activeIcon?: LucideIcon;
+  // 활성일 때 아이콘에 더할 클래스. 링크가 aria-[current=page]:text-foreground 라
+  // fill-current 는 곧 --foreground 다. lucide 는 열린 path 를 stroke 로 그리는데
+  // fill 을 svg 에 걸면 그 path 가 닫힌 것처럼 채워져 형태가 깨지므로, 그런 아이콘은
+  // 채워도 되는 도형(rect·circle)에만 건다.
+  activeClass?: string;
+  delay: string;
+  badge?: boolean;
+};
+
+const USER_GROUPS = [
+  {
+    id: 'profile',
+    label: 'Profile',
+    icon: User,
+    activeClass: 'fill-current',
+    delay: '[animation-delay:.51s]',
+  },
+  // {
+  //   id: 'liked',
+  //   label: 'Liked',
+  //   icon: Heart,
+  //   delay: '[animation-delay:.56s]',
+  // },
+  // {
+  //   id: 'saved',
+  //   label: 'Saved',
+  //   icon: Bookmark,
+  //   delay: '[animation-delay:.61s]',
+  // },
+  {
+    id: 'insights',
+    label: 'Insights',
+    icon: ChartColumn,
+    // 막대가 rect 인 아이콘으로 바꿔야 채울 면이 생긴다. 축은 열린 path 라 선으로 남는다.
+    activeIcon: ChartColumnBig,
+    activeClass: '[&_rect]:fill-current',
+    delay: '[animation-delay:.66s]',
+  },
+];
+
+const GROUPS: NavItem[][] = [
+  [
+    {
+      id: 'recommend',
+      label: 'Recommend',
+      icon: Egg,
+      activeIcon: EggFried,
+      delay: '[animation-delay:.36s]',
+    },
+    {
+      id: 'new-topic',
+      label: 'New Topic',
+      icon: Plus,
+      delay: '[animation-delay:.41s]',
+      badge: true,
+    },
+  ],
+  USER_GROUPS,
+];
+
+export function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [active, setActive] = useState('dashboard');
+
+  const navRef = useRef<HTMLElement>(null);
+  const plateRef = useRef<HTMLSpanElement>(null);
+  const pipRef = useRef<HTMLSpanElement>(null);
+
+  // 활성 링크의 offsetTop(nav 기준)을 플레이트/pip 에 옮겨 쓴다.
+  // 접힘으로 섹션 헤더가 사라져 위치가 바뀌는 경우도 같은 경로로 따라간다.
+  useLayoutEffect(() => {
+    const link = navRef.current?.querySelector<HTMLElement>(
+      '[aria-current="page"]'
+    );
+    for (const el of [plateRef.current, pipRef.current]) {
+      if (!el) continue;
+      el.style.visibility = link ? 'visible' : 'hidden';
+      if (link) {
+        el.style.top = `${link.offsetTop + (link.offsetHeight - el.offsetHeight) / 2}px`;
+      }
+    }
+  }, [active, collapsed]);
+
+  const renderItem = ({
+    id,
+    label,
+    icon,
+    activeIcon,
+    activeClass,
+    delay,
+    badge,
+  }: NavItem) => {
+    const isActive = active === id;
+    const ItemIcon = isActive ? (activeIcon ?? icon) : icon;
+
+    return (
+      <a
+        key={id}
+        href="#"
+        aria-current={isActive ? 'page' : undefined}
+        onClick={(e) => {
+          e.preventDefault();
+          setActive(id);
+        }}
+        className={`${NAV_LINK} ${delay}`}
+      >
+        <ItemIcon className={cn('size-5 shrink-0', isActive && activeClass)} />
+        <span className={LABEL}>{label}</span>
+        {badge && (
+          <span className="ml-auto size-1.5 rounded-full bg-destructive max-lg:hidden group-data-collapsed:absolute group-data-collapsed:top-2.5 group-data-collapsed:right-2.5 group-data-collapsed:ml-0" />
+        )}
+      </a>
+    );
+  };
+
+  return (
+    <aside
+      data-collapsed={collapsed || undefined}
+      className={cn(
+        'glass-panel group fixed inset-x-0 bottom-0 z-30 flex h-12.5 items-center justify-around rounded-t-3xl lg:border px-3 animate-rise-in [animation-delay:.05s] motion-reduce:animate-none',
+        'lg:relative lg:inset-auto lg:h-auto lg:w-62 lg:flex-col lg:items-stretch lg:justify-start lg:rounded-2xl lg:rounded-t-2xl',
+        'lg:transition-[width] lg:duration-300 lg:ease-out-expo',
+        'lg:px-3.5 lg:py-4 lg:mt-3.5 lg:row-span-2 lg:animate-slide-l lg:data-collapsed:w-18'
+      )}
+    >
+      <button
+        type="button"
+        onClick={() => setCollapsed((v) => !v)}
+        aria-expanded={!collapsed}
+        aria-controls="sidebar-nav"
+        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        className={`absolute top-7 -right-3.5 z-10 hidden size-7 cursor-pointer place-items-center rounded-full border bg-background text-muted-foreground transition-colors duration-220 ease-soft hover:text-foreground animate-pop-in [animation-delay:.7s] motion-reduce:animate-none lg:grid ${FOCUS}`}
+      >
+        <ChevronsLeft className="size-4 transition-[rotate] duration-300 ease-out-expo group-data-collapsed:rotate-180" />
+      </button>
+
+      {/* 뷰포트가 낮아 메뉴가 넘치면 페이지가 아니라 nav 안쪽이 스크롤된다(토스의 사이드바 overflow:auto 와 같은 역할).
+          -mx/px 로 nav 박스를 aside 안쪽 가장자리까지 넓혀 활성 pip 이 잘리지 않게 한다. */}
+      <nav
+        ref={navRef}
+        id="sidebar-nav"
+        className="relative flex max-lg:gap-1 lg:-mx-3.5 lg:mt-6.5 lg:min-h-0 lg:flex-col lg:overflow-y-auto lg:px-3.5 lg:scrollbar-thin"
+      >
+        {/* 링크보다 앞에 두어 뒤에 깔린다(링크는 relative 라 위에 그려짐). */}
+        <span
+          ref={plateRef}
+          aria-hidden="true"
+          className={`${INDICATOR} inset-x-3.5 h-11 rounded-xl bg-foreground/12 animate-rise-in [animation-delay:.36s] motion-reduce:animate-none`}
+        />
+        <span
+          ref={pipRef}
+          aria-hidden="true"
+          className={`${INDICATOR} left-0 h-7 w-1 rounded-sm bg-foreground shadow-[0_0_10px] shadow-foreground/45 animate-grow-y [animation-delay:.68s] motion-reduce:animate-none`}
+        />
+
+        {GROUPS.map((items, i) => (
+          <div
+            key={i}
+            className={`flex flex-col gap-0.5 max-lg:contents ${i > 0 ? 'lg:mt-4.5' : ''}`}
+          >
+            {items.map(renderItem)}
+          </div>
+        ))}
+
+        {/* <div className="flex flex-col gap-0.5 max-lg:hidden group-data-collapsed:mt-4.5 lg:mt-4.5">
+          {USER_GROUPS.map(renderItem)}
+        </div> */}
+
+        {/* TEST SAMPLE */}
+        <ComposerDialog
+          trigger={
+            <button
+              type="button"
+              className={`${NAV_LINK} lg:mt-4.5 [animation-delay:.74s]`}
+            >
+              <FlaskConical className="size-5 shrink-0" />
+              <span className={LABEL}>Dialog Test</span>
+            </button>
+          }
+        />
+        {/* TEST SAMPLE */}
+        <div className="flex flex-col gap-2 text-muted-foreground">
+          <div className="">로그인을 하고</div>
+          <div className="flex flex-row flex-wrap items-end gap-1">
+            <BrandStack size={32} />
+            <span>에 동시 배포 해보세요.</span>
+          </div>
+        </div>
+      </nav>
+
+      <div
+        className={cn(
+          'flex items-center gap-1.5 animate-rise-in [animation-delay:.78s] motion-reduce:animate-none',
+          'lg:mt-auto lg:border-t lg:pt-3.5 max-lg:hidden',
+          'group-data-collapsed:flex-col group-data-collapsed:gap-1'
+        )}
+      >
+        <HamburgerToggle className="w-full" />
+        <div></div>
+      </div>
+    </aside>
+  );
+}

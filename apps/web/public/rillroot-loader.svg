@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" fill="none" role="img" aria-label="Rillroot animated loading mark">
+  <style>
+    .stroke {
+      stroke: #B8F34A;
+      stroke-width: 4.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      opacity: 0;
+      animation: rillroot-draw 1.8s cubic-bezier(.65, 0, .35, 1) infinite;
+    }
+    .top { animation-delay: 0ms; }
+    .middle { animation-delay: 80ms; }
+    .bottom { animation-delay: 40ms; }
+    @keyframes rillroot-draw {
+      0%, 8% { stroke-dashoffset: 1; opacity: 0; }
+      14% { opacity: 1; }
+      58%, 76% { stroke-dashoffset: 0; opacity: 1; }
+      88%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .stroke { animation: none; stroke-dashoffset: 0; opacity: 1; }
+    }
+  </style>
+  <!-- Upper stroke: left to right. -->
+  <path class="stroke top" pathLength="1" d="M43 75C62 75 76 62 76 48V18"/>
+  <!-- Centre stroke: begins at its centre and expands in both directions. -->
+  <path class="stroke middle" pathLength="1" d="M80 77C69 87 58 91 45 89"/>
+  <path class="stroke middle" pathLength="1" d="M80 77C95 63.5 118 61 139 76.5"/>
+  <!-- Lower stroke: right to left. -->
+  <path class="stroke bottom" pathLength="1" d="M121 84C99.5 79.5 82 94.5 82 111"/>
+</svg>

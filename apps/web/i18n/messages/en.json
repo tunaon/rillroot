@@ -11,5 +11,26 @@
     "database": "Database",
     "app": "App",
     "time": "Time"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "title": "Sign in to Rillroot",
+    "google": "Continue with Google",
+    "or": "or",
+    "emailPlaceholder": "Enter your email",
+    "codeTitle": "Enter the code",
+    "codeSentTo": "Enter the 6-digit code we sent to <strong>{email}</strong>.",
+    "resend": "Resend code",
+    "resendIn": "Resend code ({seconds}s)",
+    "changeEmail": "Use a different email",
+    "noEmail": "Didn't get an email?",
+    "submit": "Submit",
+    "close": "Close",
+    "errors": {
+      "expiredCode": "That code is invalid or has expired. Request a new one.",
+      "tooManyRequests": "Please try again in a moment.",
+      "generic": "Something went wrong. Please try again."
+    }
   }
 }

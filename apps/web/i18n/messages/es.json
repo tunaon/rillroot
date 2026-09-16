@@ -11,5 +11,26 @@
     "database": "Database",
     "app": "Aplicación",
     "time": "Hora"
+  },
+  "auth": {
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "title": "Inicia sesión en Rillroot",
+    "google": "Continuar con Google",
+    "or": "o",
+    "emailPlaceholder": "Introduce tu correo",
+    "codeTitle": "Introduce el código",
+    "codeSentTo": "Introduce el código de 6 dígitos que enviamos a <strong>{email}</strong>.",
+    "resend": "Reenviar código",
+    "resendIn": "Reenviar código ({seconds} s)",
+    "changeEmail": "Usar otro correo",
+    "noEmail": "¿No recibiste el correo?",
+    "submit": "Enviar",
+    "close": "Cerrar",
+    "errors": {
+      "expiredCode": "El código no es válido o ha caducado. Solicita uno nuevo.",
+      "tooManyRequests": "Inténtalo de nuevo en un momento.",
+      "generic": "Algo salió mal. Inténtalo de nuevo."
+    }
   }
 }

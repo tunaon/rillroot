@@ -1,6 +1,7 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
+import { type Theme, isTheme } from '@rillroot/shared';
 import { Badge } from '@rillroot/ui/components/badge';
 import { Button } from '@rillroot/ui/components/button';
 import {
@@ -9,8 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@rillroot/ui/components/card';
+import { Progress } from '@rillroot/ui/components/progress';
 import { cn } from '@rillroot/ui/lib/utils';
+import { MoonIcon, SunIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export interface HealthResponse {
   status: string;
@@ -43,8 +49,53 @@ function StatusBadge({ label, status }: { label: string; status: string }) {
   );
 }
 
+const TOAST_SAMPLES = [
+  { label: 'normal', fire: () => toast('Normal toast') },
+  { label: 'info', fire: () => toast.info('Info toast') },
+  { label: 'success', fire: () => toast.success('Success toast') },
+  { label: 'warning', fire: () => toast.warning('Warning toast') },
+  { label: 'error', fire: () => toast.error('Error toast') },
+  {
+    label: 'loading',
+    fire: () => toast.loading('Loading toast', { duration: 2000 }),
+  },
+  {
+    label: 'description',
+    fire: () =>
+      toast('Toast with description', {
+        description: 'Sonner supports a secondary line of text.',
+      }),
+  },
+  {
+    label: 'action',
+    fire: () =>
+      toast('Toast with action', {
+        action: { label: 'Undo', onClick: () => toast.success('Undone') },
+      }),
+  },
+];
+
 export default function HealthStatus({ health }: Props) {
   const t = useTranslations();
+  const { setTheme, theme } = useTheme();
+
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setProgress((v) => (v >= 100 ? 0 : v + 10));
+    }, 300);
+    return () => clearInterval(id);
+  }, []);
+
+  const setThemeWithTransition = (nextTheme: Theme) => {
+    const anyDoc = document;
+    if (anyDoc.startViewTransition) {
+      anyDoc.startViewTransition(() => setTheme(nextTheme));
+    } else {
+      setTheme(nextTheme);
+    }
+  };
 
   if (health.status === 'error') {
     return (
@@ -91,7 +142,7 @@ export default function HealthStatus({ health }: Props) {
         </CardHeader>
         <CardContent className="space-y-3">
           <StatusBadge label={t('health.api')} status={health.status} />
-          <StatusBadge label={t('health.supabase')} status={health.supabase} />
+          <StatusBadge label={t('health.database')} status={health.supabase} />
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">
               {t('health.app')}
@@ -108,6 +159,35 @@ export default function HealthStatus({ health }: Props) {
           </div>
         </CardContent>
       </Card>
+
+      <div className="flex flex-wrap justify-center gap-2">
+        {TOAST_SAMPLES.map(({ label, fire }) => (
+          <Button key={label} variant="outline" size="sm" onClick={fire}>
+            {label}
+          </Button>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-3">
+        <Progress value={progress} className="flex-1" />
+        <span className="w-10 text-right text-sm tabular-nums text-muted-foreground">
+          {progress}%
+        </span>
+      </div>
+
+      <div className="flex justify-center items-center">
+        <Button
+          variant="default"
+          className="cursor-pointer p-0.5"
+          value={theme}
+          onClick={({ currentTarget: { value } }) =>
+            isTheme(value) &&
+            setThemeWithTransition(value === 'light' ? 'dark' : 'light')
+          }
+        >
+          {theme === 'light' ? <MoonIcon size={16} /> : <SunIcon size={16} />}
+        </Button>
+      </div>
 
       <div className="flex justify-center">
         <Button variant="outline" className="w-fit py-1 px-4">
