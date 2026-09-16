@@ -357,7 +357,7 @@ export default function SampleHomePage() {
     <div
       className={cn(
         'relative min-h-dvh bg-background text-foreground antialiased',
-        'lg:grid lg:h-dvh lg:grid-cols-[auto_minmax(0,1fr)] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-7 lg:gap-y-2.5',
+        'lg:grid lg:h-dvh lg:grid-cols-[auto_minmax(0,1fr)] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-7',
         'lg:p-3.5 lg:pt-0'
       )}
     >
@@ -385,13 +385,25 @@ export default function SampleHomePage() {
       {/* threads.com 의 중앙 컬럼과 같은 640px(max-w-160) 카드를 남은 영역 가운데에 둔다.
           포스트는 카드 안에서 구분선으로만 나뉜다. */}
       <main className="flex min-h-0 justify-center pb-24 lg:pb-0">
-        <section className="flex min-h-0 w-full max-w-160 flex-col motion-reduce:animate-none lg:glass-card lg:sheen lg:rounded-2xl lg:border lg:animate-slide-r lg:[animation-delay:.8s]">
+        <section
+          className={cn(
+            'flex min-h-0 w-full max-w-160 flex-col motion-reduce:animate-none',
+            'lg:sheen lg:rounded-2xl lg:border lg:animate-slide-r lg:[animation-delay:.8s]'
+            // 'lg:glass-card'
+          )}
+        >
           <div className="min-h-0 flex-1 overscroll-y-none lg:overflow-y-auto lg:scrollbar-none">
             {/* 스크롤 컨테이너의 직계 자식이라 그 위 끝에 붙는다. lg 에서는 glass-card 그라디언트의
                 윗부분(9%→9.9%)을 그대로 이어받아 background 위에 불투명하게 깔아 뒤로 지나가는
                 포스트를 가리고, 아래는 border 로 마감한다. --border 토큰은 이 표면 위에서 대비가
                 2단계뿐이라 표면과 같은 축인 foreground/10 을 쓴다. */}
-            <div className="sticky top-[calc(var(--spacing)*14-1px)] z-10 flex items-center gap-2 border-b border-foreground/10 bg-background px-4.5 py-3 lg:top-0 lg:bg-linear-to-b lg:from-foreground/9 lg:to-foreground/[9.9%] lg:px-5">
+            <div
+              className={cn(
+                'sticky top-[calc(var(--spacing)*14-1px)] z-10 flex items-center gap-2 border-b border-foreground/10 bg-background px-4.5 py-3',
+                'lg:top-0 lg:px-5'
+                // 'lg:bg-linear-to-b lg:from-foreground/9 lg:to-foreground/[9.9%]'
+              )}
+            >
               <span className="inline-flex h-9 items-center rounded-full border bg-foreground/12 px-4 text-sm font-semibold tracking-[0.2px] backdrop-blur-lg backdrop-saturate-[1.15] animate-wipe-right [animation-delay:.44s] motion-reduce:animate-none">
                 For you
               </span>

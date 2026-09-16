@@ -1,5 +1,6 @@
 'use client';
 
+import { useProfile } from '@/providers/auth-context';
 import { cn } from '@rillroot/ui/lib/utils';
 import {
   ChartColumn,
@@ -97,6 +98,9 @@ const GROUPS: NavItem[][] = [
 ];
 
 export function Sidebar() {
+  const profile = useProfile();
+  console.log('sidebar', profile);
+
   const [collapsed, setCollapsed] = useState(false);
   const [active, setActive] = useState('dashboard');
 
@@ -155,7 +159,8 @@ export function Sidebar() {
     <aside
       data-collapsed={collapsed || undefined}
       className={cn(
-        'glass-panel group fixed inset-x-0 bottom-0 z-30 flex h-12.5 items-center justify-around rounded-t-3xl lg:border px-3 animate-rise-in [animation-delay:.05s] motion-reduce:animate-none',
+        // 'glass-panel'
+        'group fixed inset-x-0 bottom-0 z-30 flex h-12.5 items-center justify-around rounded-t-3xl lg:border px-3 animate-rise-in [animation-delay:.05s] motion-reduce:animate-none',
         'lg:relative lg:inset-auto lg:h-auto lg:w-62 lg:flex-col lg:items-stretch lg:justify-start lg:rounded-2xl lg:rounded-t-2xl',
         'lg:transition-[width] lg:duration-300 lg:ease-out-expo',
         'lg:px-3.5 lg:py-4 lg:mt-3.5 lg:row-span-2 lg:animate-slide-l lg:data-collapsed:w-18'
@@ -167,7 +172,11 @@ export function Sidebar() {
         aria-expanded={!collapsed}
         aria-controls="sidebar-nav"
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        className={`absolute top-7 -right-3.5 z-10 hidden size-7 cursor-pointer place-items-center rounded-full border bg-background text-muted-foreground transition-colors duration-220 ease-soft hover:text-foreground animate-pop-in [animation-delay:.7s] motion-reduce:animate-none lg:grid ${FOCUS}`}
+        className={cn(
+          'absolute top-7 -right-3.5 z-10 size-7 cursor-pointer place-items-center rounded-full bg-background text-muted-foreground transition-colors duration-220 ease-soft',
+          'border border-muted-foreground hidden lg:grid',
+          `hover:text-foreground animate-pop-in [animation-delay:.7s] motion-reduce:animate-none ${FOCUS}`
+        )}
       >
         <ChevronsLeft className="size-4 transition-[rotate] duration-300 ease-out-expo group-data-collapsed:rotate-180" />
       </button>
@@ -177,7 +186,7 @@ export function Sidebar() {
       <nav
         ref={navRef}
         id="sidebar-nav"
-        className="relative flex max-lg:gap-1 lg:-mx-3.5 lg:mt-6.5 lg:min-h-0 lg:flex-col lg:overflow-y-auto lg:px-3.5 lg:scrollbar-thin"
+        className="relative flex max-lg:gap-1 lg:-mx-3.5 lg:min-h-0 lg:flex-col lg:overflow-y-auto lg:px-3.5 lg:scrollbar-thin"
       >
         {/* 링크보다 앞에 두어 뒤에 깔린다(링크는 relative 라 위에 그려짐). */}
         <span
