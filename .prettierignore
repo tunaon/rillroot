@@ -6,3 +6,4 @@ coverage
 pnpm-lock.yaml
 next-env.d.ts
 packages/supabase/src/database.types.ts
+packages/supabase/schema/*.erd.json

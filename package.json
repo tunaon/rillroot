@@ -6,8 +6,10 @@
   "author": "tunaon",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "pnpm run build:shared && pnpm run build:ui && turbo run dev",
     "build": "turbo run build",
+    "build:shared": "turbo run build --filter=@rillroot/shared",
+    "build:ui": "turbo run build --filter=@rillroot/ui",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "lint": "turbo run lint",
