@@ -1,4 +1,3 @@
 export * from './constants';
-export { CreateLinkDto } from './links/dto/create-link.dto';
-export { UpdateLinkDto } from './links/dto/update-link.dto';
-export { Link } from './links/entities/link.entity';
+export type * from './types';
+export * from './utils';

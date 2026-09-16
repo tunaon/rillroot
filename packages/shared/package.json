@@ -27,9 +27,6 @@
       "require": "./dist/*.js"
     }
   },
-  "dependencies": {
-    "@nestjs/mapped-types": "*"
-  },
   "devDependencies": {
     "@rillroot/eslint-config": "workspace:*",
     "@rillroot/typescript-config": "workspace:*",
