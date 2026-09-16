@@ -55,7 +55,6 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException();
       }
 
-      console.info('log auth', payload);
       request.userId = payload.sub;
       request.signIn = readSignIn(payload.amr);
       return true;

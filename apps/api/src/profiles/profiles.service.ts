@@ -163,7 +163,6 @@ export class ProfilesService {
     visit: Visit
   ): Promise<ProfileUpdate | null> {
     const patch: ProfileUpdate = {};
-
     if (visit.country && visit.country !== current.last_country) {
       patch.last_country = visit.country;
     }
@@ -207,6 +206,7 @@ export class ProfilesService {
       return null;
     }
 
+    // userId를 기준으로 auth.user의 정보를 조회
     const { data, error } = await this.supabaseService
       .getClient()
       .auth.admin.getUserById(userId);
