@@ -1,4 +1,5 @@
 import { Controller, Get, Headers, UseGuards } from '@nestjs/common';
+import { toCountryCode } from '@rillroot/shared';
 import { AuthGuard, type SignIn } from '../auth/auth.guard';
 import { CurrentSignIn } from '../auth/current-sign-in.decorator';
 import { CurrentUserId } from '../auth/current-user-id.decorator';
@@ -16,18 +17,9 @@ export class ProfilesController {
     @Headers('x-country') country?: string
   ) {
     return this.profilesService.findOrCreateById(userId, {
-      country: readCountry(country),
+      // 사용자가 헤더를 직접 넣을 수 있으므로 실재하는 국가 코드만 받는다.
+      country: toCountryCode(country),
       signIn,
     });
   }
-}
-
-/**
- * 웹 서버가 전달한 접속 국가를 읽는다. 배포 환경이 아니면 비어 있다.
- *
- * @param value x-country 헤더 값
- * @returns 두 글자 국가 코드, 형식이 맞지 않으면 null
- */
-function readCountry(value: string | undefined): string | null {
-  return value && /^[A-Z]{2}$/.test(value) ? value : null;
 }
