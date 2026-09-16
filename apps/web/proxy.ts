@@ -1,9 +1,10 @@
-import { DEFAULT_LOCALE } from '@/i18n/locales';
 import { routing } from '@/i18n/routing';
+import { DEFAULT_COUNTRY, localeToCountryCode } from '@rillroot/shared';
 import type { Database } from '@rillroot/supabase';
 import { createServerClient } from '@supabase/ssr';
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
+import { DEFAULT_LOCALE } from './i18n/locales';
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -27,7 +28,10 @@ async function proxy(request: NextRequest) {
   );
 
   // Country code from Vercel geo headers
-  const country = request.headers.get('x-vercel-ip-country') || DEFAULT_LOCALE;
+  const country =
+    request.headers.get('x-vercel-ip-country') ||
+    localeToCountryCode(DEFAULT_LOCALE) ||
+    DEFAULT_COUNTRY;
   console.info('[LOG] Country Info 🎿', country);
   response.cookies.set('user-country', country, {
     httpOnly: false, // Client-side JavaScript needs to read this cookie

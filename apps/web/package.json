@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
+    "@rillroot/shared": "workspace:*",
     "@rillroot/supabase": "workspace:*",
     "@rillroot/ui": "workspace:*",
     "@supabase/ssr": "catalog:",
@@ -29,7 +30,6 @@
   },
   "devDependencies": {
     "@rillroot/eslint-config": "workspace:*",
-    "@rillroot/shared": "workspace:*",
     "@rillroot/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",

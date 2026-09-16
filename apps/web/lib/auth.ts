@@ -1,4 +1,6 @@
+import { DEFAULT_LOCALE } from '@/i18n/locales';
 import { createClient } from '@/lib/supabase/server';
+import { localeToCountryCode } from '@rillroot/shared';
 import { headers } from 'next/headers';
 
 export interface Profile {
@@ -28,9 +30,12 @@ export async function getCurrentProfile(): Promise<Profile | null> {
     return null;
   }
 
-  // 접속 국가는 배포 환경에서만 채워진다. API가 이 값으로 마지막 접속 국가를 남긴다.
-  const country = (await headers()).get('x-vercel-ip-country');
-  console.info('getCurrentProfile', { country });
+  // 접속 국가는 배포 환경에서만 헤더로 들어온다. API가 이 값으로 마지막 접속 국가를 남긴다.
+  // 헤더가 없는 로컬에서는 기본값을 보내므로, 저장되는 값이 실제 접속 국가가 아닐 수 있다.
+  const country =
+    (await headers()).get('x-vercel-ip-country') ??
+    localeToCountryCode(DEFAULT_LOCALE);
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/profiles/me`,
