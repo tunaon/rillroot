@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { SupabaseClient } from '@rillroot/supabase';
-import { createServerClient } from '@rillroot/supabase';
+import { createAdminClient } from '@rillroot/supabase';
 import type { Env } from '../config/env.schema';
 
 @Injectable()
@@ -12,9 +12,9 @@ export class SupabaseService implements OnModuleInit {
 
   onModuleInit() {
     const url = this.config.getOrThrow<string>('SUPABASE_URL');
-    const key = this.config.getOrThrow<string>('SUPABASE_SERVICE_ROLE_KEY');
+    const key = this.config.getOrThrow<string>('SUPABASE_SECRET_KEY');
 
-    this.client = createServerClient(url, key);
+    this.client = createAdminClient(url, key);
   }
 
   getClient(): SupabaseClient {
