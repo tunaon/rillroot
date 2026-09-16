@@ -65,3 +65,5 @@ pnpm format        # Prettier 일괄 포맷
 **Prettier** — 루트 `.prettierrc.mjs` 하나만 두고 `@rillroot/eslint-config/prettier-base`를 재사용합니다. 워크스페이스별 설정 파일은 두지 않습니다.
 
 **테스트** — Jest를 표준으로 합니다. 테스트를 추가할 때 `@rillroot/jest-config`의 프리셋을 붙이고, 워크스페이스마다 설정을 새로 작성하지 않습니다.
+
+1. PC일때는 Dialog 이지만 Mobile(lg)일때는 Drawer 로 진행하며 shadcn의 Drawer responsive를 활용 하는 컴포넌트 추가
