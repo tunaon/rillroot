@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" fill="none" role="img" aria-label="Rillroot favicon">
-  <rect width="160" height="140" rx="30" fill="#B8F34A"/>
-  <g stroke="#0A0C0A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M76 18V48C76 62 62 75 43 75"/>
-    <path d="M45 89C58 91 69 87 80 77C95 63.5 118 61 139 76.5"/>
-    <path d="M82 111C82 94.5 99.5 79.5 121 84"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none" role="img" aria-label="Rillroot favicon">
+  <rect width="160" height="160" rx="30" fill="#B8F34A"/>
+  <g stroke="#0A0C0A" stroke-width="9.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M65 33.5V63.5C65 77.5 51 90.5 32 90.5"/>
+    <path d="M34 104.5C47 106.5 58 102.5 69 92.5C84 79 107 76.5 128 92"/>
+    <path d="M71 126.5C71 110 88.5 95 110 99.5"/>
   </g>
 </svg>
