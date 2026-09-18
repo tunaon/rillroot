@@ -7,6 +7,7 @@ import {
   motion,
   useReducedMotion,
 } from 'motion/react';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 
 // fill 은 각 브랜드의 공식 색. X 와 Threads 는 브랜드 컬러가 실제로 #000000 이라
@@ -72,13 +73,22 @@ const VISIBLE = Math.min(BRANDS.length, SLOTS.length);
 export default function BrandStack({
   size = BASE_SIZE,
   iconSize = size / 2,
+  inline = false,
 }: {
   /** 칩 지름(px). 슬롯 간격도 이 값에 비례해 함께 커진다. */
   size?: number;
   /** 칩 안 로고 크기(px). 생략하면 칩의 절반. */
   iconSize?: number;
+  /** 문장 안에 끼워 쓸 때. 글자와 한 줄로 흐르고, 문장이 뜻을 전하므로 브랜드 이름만 읽힌다. */
+  inline?: boolean;
 }) {
+  const t = useTranslations('brandStack');
+  const format = useFormatter();
   const reduced = useReducedMotion();
+  const names = format.list(
+    BRANDS.map((b) => b.label),
+    { type: 'conjunction' }
+  );
   const [index, setIndex] = useState(0);
 
   // 오프셋을 현재 크기로 환산한다. 매 렌더 새 객체를 만들면 motion 이 같은 값에도
@@ -109,9 +119,11 @@ export default function BrandStack({
   return (
     <div
       role="img"
-      aria-label={`${BRANDS.map((b) => b.label).join(', ')}에 게시됨`}
+      aria-label={inline ? names : t('publishedTo', { brands: names })}
       style={{ height: size, width }}
-      className="relative shrink-0"
+      className={
+        inline ? 'relative inline-block align-middle' : 'relative shrink-0'
+      }
     >
       <AnimatePresence initial={false}>
         {slots.slice(0, VISIBLE).map((slot, offset) => {

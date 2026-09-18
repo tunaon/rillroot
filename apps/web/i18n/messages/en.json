@@ -32,5 +32,11 @@
       "tooManyRequests": "Please try again in a moment.",
       "generic": "Something went wrong. Please try again."
     }
+  },
+  "sidebar": {
+    "guestIntro": "Sign in and publish to <brands></brands> at once."
+  },
+  "brandStack": {
+    "publishedTo": "Published to {brands}"
   }
 }

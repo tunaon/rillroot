@@ -32,5 +32,11 @@
       "tooManyRequests": "잠시 후 다시 시도해주세요.",
       "generic": "문제가 발생했습니다. 다시 시도해주세요."
     }
+  },
+  "sidebar": {
+    "guestIntro": "로그인을 하고 <brands></brands>에 동시 배포 해보세요."
+  },
+  "brandStack": {
+    "publishedTo": "{brands}에 게시됨"
   }
 }

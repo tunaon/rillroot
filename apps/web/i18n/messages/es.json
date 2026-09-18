@@ -32,5 +32,11 @@
       "tooManyRequests": "Inténtalo de nuevo en un momento.",
       "generic": "Algo salió mal. Inténtalo de nuevo."
     }
+  },
+  "sidebar": {
+    "guestIntro": "Inicia sesión y publica en <brands></brands> a la vez."
+  },
+  "brandStack": {
+    "publishedTo": "Publicado en {brands}"
   }
 }

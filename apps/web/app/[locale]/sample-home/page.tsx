@@ -236,7 +236,7 @@ function PostCard({
     <article
       className={cn(
         `px-4.5 py-4 animate-rise-in motion-reduce:animate-none lg:px-5 ${delay}`,
-        'not-last:border-b not-last:border-foreground/10'
+        'not-last:border-b not-last:border-card-foreground'
       )}
     >
       {repostedBy && (
@@ -388,7 +388,7 @@ export default function SampleHomePage() {
         <section
           className={cn(
             'flex min-h-0 w-full max-w-160 flex-col motion-reduce:animate-none',
-            'lg:sheen lg:rounded-2xl lg:border lg:animate-slide-r lg:[animation-delay:.8s]'
+            'lg:sheen lg:rounded-2xl lg:border lg:border-card-foreground lg:animate-slide-r lg:[animation-delay:.8s]'
             // 'lg:glass-card'
           )}
         >
@@ -399,16 +399,14 @@ export default function SampleHomePage() {
                 2단계뿐이라 표면과 같은 축인 foreground/10 을 쓴다. */}
             <div
               className={cn(
-                'sticky top-[calc(var(--spacing)*14-1px)] z-10 flex items-center gap-2 border-b border-foreground/10 bg-background px-4.5 py-3',
+                'sticky top-[calc(var(--spacing)*14-1px)] z-10',
+                'flex items-center gap-2 border-b border-card-foreground bg-background px-4.5 py-3',
                 'lg:top-0 lg:px-5'
                 // 'lg:bg-linear-to-b lg:from-foreground/9 lg:to-foreground/[9.9%]'
               )}
             >
               <span className="inline-flex h-9 items-center rounded-full border bg-foreground/12 px-4 text-sm font-semibold tracking-[0.2px] backdrop-blur-lg backdrop-saturate-[1.15] animate-wipe-right [animation-delay:.44s] motion-reduce:animate-none">
-                For you
-              </span>
-              <span className="inline-flex h-9 items-center rounded-full px-4 text-sm font-medium text-muted-foreground animate-wipe-right [animation-delay:.52s] motion-reduce:animate-none">
-                Following
+                Recommend
               </span>
             </div>
 

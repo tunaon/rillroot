@@ -3,20 +3,19 @@
 import { useProfile } from '@/providers/auth-context';
 import { cn } from '@rillroot/ui/lib/utils';
 import {
-  ChartColumn,
-  ChartColumnBig,
   ChevronsLeft,
   Egg,
   EggFried,
-  FlaskConical,
   type LucideIcon,
   Plus,
   User,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useLayoutEffect, useRef, useState } from 'react';
 import BrandStack from './brand-stack';
 import ComposerDialog from './composer-dialog';
 import HamburgerToggle from './hamburger-toggle';
+import WaveBackground from './wave-background';
 
 const FOCUS =
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
@@ -44,9 +43,19 @@ type NavItem = {
   activeClass?: string;
   delay: string;
   badge?: boolean;
+  // 페이지 이동이 아니라 작성 다이얼로그를 여는 항목. 활성 상태가 되지 않는다.
+  compose?: boolean;
 };
 
-const USER_GROUPS = [
+const RECOMMEND: NavItem = {
+  id: 'recommend',
+  label: 'Recommend',
+  icon: Egg,
+  activeIcon: EggFried,
+  delay: '[animation-delay:.36s]',
+};
+
+const USER_GROUPS: NavItem[] = [
   {
     id: 'profile',
     label: 'Profile',
@@ -66,43 +75,32 @@ const USER_GROUPS = [
   //   icon: Bookmark,
   //   delay: '[animation-delay:.61s]',
   // },
-  {
-    id: 'insights',
-    label: 'Insights',
-    icon: ChartColumn,
-    // 막대가 rect 인 아이콘으로 바꿔야 채울 면이 생긴다. 축은 열린 path 라 선으로 남는다.
-    activeIcon: ChartColumnBig,
-    activeClass: '[&_rect]:fill-current',
-    delay: '[animation-delay:.66s]',
-  },
 ];
 
 const GROUPS: NavItem[][] = [
   [
-    {
-      id: 'recommend',
-      label: 'Recommend',
-      icon: Egg,
-      activeIcon: EggFried,
-      delay: '[animation-delay:.36s]',
-    },
+    RECOMMEND,
     {
       id: 'new-topic',
       label: 'New Topic',
       icon: Plus,
       delay: '[animation-delay:.41s]',
       badge: true,
+      compose: true,
     },
   ],
   USER_GROUPS,
 ];
 
+// 비회원은 피드 탐색만 할 수 있다.
+const GUEST_GROUPS: NavItem[][] = [[RECOMMEND]];
+
 export function Sidebar() {
   const profile = useProfile();
-  console.log('sidebar', profile);
+  const t = useTranslations('sidebar');
 
   const [collapsed, setCollapsed] = useState(false);
-  const [active, setActive] = useState('dashboard');
+  const [active, setActive] = useState('recommend');
 
   const navRef = useRef<HTMLElement>(null);
   const plateRef = useRef<HTMLSpanElement>(null);
@@ -131,9 +129,33 @@ export function Sidebar() {
     activeClass,
     delay,
     badge,
+    compose,
   }: NavItem) => {
     const isActive = active === id;
     const ItemIcon = isActive ? (activeIcon ?? icon) : icon;
+
+    const content = (
+      <>
+        <ItemIcon className={cn('size-5 shrink-0', isActive && activeClass)} />
+        <span className={LABEL}>{label}</span>
+        {badge && (
+          <span className="ml-auto size-1.5 rounded-full bg-destructive max-lg:hidden group-data-collapsed:absolute group-data-collapsed:top-2.5 group-data-collapsed:right-2.5 group-data-collapsed:ml-0" />
+        )}
+      </>
+    );
+
+    if (compose) {
+      return (
+        <ComposerDialog
+          key={id}
+          trigger={
+            <button type="button" className={`${NAV_LINK} ${delay}`}>
+              {content}
+            </button>
+          }
+        />
+      );
+    }
 
     return (
       <a
@@ -146,11 +168,7 @@ export function Sidebar() {
         }}
         className={`${NAV_LINK} ${delay}`}
       >
-        <ItemIcon className={cn('size-5 shrink-0', isActive && activeClass)} />
-        <span className={LABEL}>{label}</span>
-        {badge && (
-          <span className="ml-auto size-1.5 rounded-full bg-destructive max-lg:hidden group-data-collapsed:absolute group-data-collapsed:top-2.5 group-data-collapsed:right-2.5 group-data-collapsed:ml-0" />
-        )}
+        {content}
       </a>
     );
   };
@@ -159,13 +177,19 @@ export function Sidebar() {
     <aside
       data-collapsed={collapsed || undefined}
       className={cn(
-        // 'glass-panel'
-        'group fixed inset-x-0 bottom-0 z-30 flex h-12.5 items-center justify-around rounded-t-3xl lg:border px-3 animate-rise-in [animation-delay:.05s] motion-reduce:animate-none',
-        'lg:relative lg:inset-auto lg:h-auto lg:w-62 lg:flex-col lg:items-stretch lg:justify-start lg:rounded-2xl lg:rounded-t-2xl',
+        // 게스트는 물결 캔버스가 비치도록 테마 배경색을 깐다. glass-panel 은 background
+        // 단축 속성이라 함께 걸면 배경색을 덮어쓰므로 회원에게만 건다.
+        profile ? 'max-lg:glass-panel' : 'bg-background',
+        // 물결 배경의 -z-10 이 aside 밖으로 내려가지 않게 쌓임 맥락을 만든다.
+        'isolate',
+        'group fixed inset-x-0 bottom-0 z-30 flex h-12.5 items-center justify-around rounded-t-3xl px-3 animate-rise-in [animation-delay:.05s] motion-reduce:animate-none',
+        'lg:border lg:border-card-foreground lg:relative lg:inset-auto lg:h-auto lg:w-62 lg:flex-col lg:items-stretch lg:justify-start lg:rounded-2xl lg:rounded-t-2xl',
         'lg:transition-[width] lg:duration-300 lg:ease-out-expo',
         'lg:px-3.5 lg:py-4 lg:mt-3.5 lg:row-span-2 lg:animate-slide-l lg:data-collapsed:w-18'
       )}
     >
+      {!profile && <WaveBackground />}
+
       <button
         type="button"
         onClick={() => setCollapsed((v) => !v)}
@@ -186,7 +210,11 @@ export function Sidebar() {
       <nav
         ref={navRef}
         id="sidebar-nav"
-        className="relative flex max-lg:gap-1 lg:-mx-3.5 lg:min-h-0 lg:flex-col lg:overflow-y-auto lg:px-3.5 lg:scrollbar-thin"
+        className={cn(
+          'relative flex max-lg:gap-1 lg:-mx-3.5 lg:min-h-0 lg:flex-col lg:overflow-y-auto lg:px-3.5 lg:scrollbar-thin',
+          // 비회원 메뉴는 하나뿐이라 모바일 하단 바는 소개 메시지로 대신한다.
+          !profile && 'max-lg:hidden'
+        )}
       >
         {/* 링크보다 앞에 두어 뒤에 깔린다(링크는 relative 라 위에 그려짐). */}
         <span
@@ -200,7 +228,7 @@ export function Sidebar() {
           className={`${INDICATOR} left-0 h-7 w-1 rounded-sm bg-foreground shadow-[0_0_10px] shadow-foreground/45 animate-grow-y [animation-delay:.68s] motion-reduce:animate-none`}
         />
 
-        {GROUPS.map((items, i) => (
+        {(profile ? GROUPS : GUEST_GROUPS).map((items, i) => (
           <div
             key={i}
             className={`flex flex-col gap-0.5 max-lg:contents ${i > 0 ? 'lg:mt-4.5' : ''}`}
@@ -212,28 +240,22 @@ export function Sidebar() {
         {/* <div className="flex flex-col gap-0.5 max-lg:hidden group-data-collapsed:mt-4.5 lg:mt-4.5">
           {USER_GROUPS.map(renderItem)}
         </div> */}
-
-        {/* TEST SAMPLE */}
-        <ComposerDialog
-          trigger={
-            <button
-              type="button"
-              className={`${NAV_LINK} lg:mt-4.5 [animation-delay:.74s]`}
-            >
-              <FlaskConical className="size-5 shrink-0" />
-              <span className={LABEL}>Dialog Test</span>
-            </button>
-          }
-        />
-        {/* TEST SAMPLE */}
-        <div className="flex flex-col gap-2 text-muted-foreground">
-          <div className="">로그인을 하고</div>
-          <div className="flex flex-row flex-wrap items-end gap-1">
-            <BrandStack size={32} />
-            <span>에 동시 배포 해보세요.</span>
-          </div>
-        </div>
       </nav>
+
+      {/* BrandStack 이 div 라 p 가 아닌 div 로 감싼다. 어순은 언어마다 달라 문구 쪽이 위치를 정한다. */}
+      {!profile && (
+        <div
+          className={cn(
+            'lg:text-xl text-sm leading-7 text-foreground whitespace-nowrap',
+            'animate-rise-in [animation-delay:.41s] motion-reduce:animate-none',
+            // 메뉴 흐름과 무관하게 사이드바 높이의 가운데에 둔다. rise-in 은 transform 을,
+            // -translate-y 는 translate 속성을 쓰므로 등장 애니메이션과 겹치지 않는다.
+            'lg:absolute lg:inset-x-3.5 lg:top-1/2 lg:-translate-y-1/2 lg:px-2 lg:whitespace-normal group-data-collapsed:hidden'
+          )}
+        >
+          {t.rich('guestIntro', { brands: () => <BrandStack inline /> })}
+        </div>
+      )}
 
       <div
         className={cn(
@@ -243,7 +265,6 @@ export function Sidebar() {
         )}
       >
         <HamburgerToggle className="w-full" />
-        <div></div>
       </div>
     </aside>
   );

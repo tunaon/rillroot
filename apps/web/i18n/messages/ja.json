@@ -32,5 +32,11 @@
       "tooManyRequests": "しばらくしてからもう一度お試しください。",
       "generic": "問題が発生しました。もう一度お試しください。"
     }
+  },
+  "sidebar": {
+    "guestIntro": "ログインして<brands></brands> に同時投稿しましょう。"
+  },
+  "brandStack": {
+    "publishedTo": "{brands}に投稿済み"
   }
 }
