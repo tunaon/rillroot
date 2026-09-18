@@ -90,12 +90,14 @@ function Frame({
   nav,
   maxHeight,
   autoFocus,
+  dialogTitle,
   onMeasure,
 }: {
   view: DrillDownViewProps;
   nav: DrillDownNav;
   maxHeight: string;
   autoFocus: boolean;
+  dialogTitle: boolean;
   onMeasure(height: number): void;
 }) {
   // 빠져나가는 동안 AnimatePresence 가 이 프레임을 계속 마운트해 둔다.
@@ -104,7 +106,7 @@ function Frame({
 
   // 전환 중에는 두 프레임이 함께 떠 있다. 둘 다 Radix Title 이면 같은 titleId 가
   // 양쪽에 박혀 DOM id 가 중복된다. 들어오는 쪽만 진짜 Title 로 그린다.
-  const Heading = isPresent ? DialogPrimitive.Title : 'h2';
+  const Heading = dialogTitle && isPresent ? DialogPrimitive.Title : 'h2';
 
   // 페인트 전에 재야 한다. 뷰가 바뀌는 커밋에서 컨테이너는 아직 이전 높이를 붙들고
   // 있고, 새 프레임은 그 안에서 잘린 채다. 여기서 실제 높이를 넘겨 전환을 시작한다.
@@ -146,7 +148,7 @@ function Frame({
       {(view.title || view.leading || view.trailing) && (
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-b px-4 py-3">
           <span className="justify-self-start">{view.leading}</span>
-          <Heading className="truncate text-base font-semibold">
+          <Heading className="truncate text-sm font-semibold">
             {view.title}
           </Heading>
           <span className="justify-self-end">{view.trailing}</span>
@@ -167,12 +169,18 @@ export function DrillDown({
   children,
   className,
   maxHeight = '70dvh',
+  dialogTitle = true,
   ref,
 }: {
   children: React.ReactNode;
   className?: string;
   /** 프레임 높이 상한. Drawer 의 max-h-[80vh] 보다 낮아야 시트 밖으로 안 넘친다. */
   maxHeight?: string;
+  /**
+   * 뷰 제목을 Dialog 의 접근성 제목으로 그린다. Radix Title 은 Dialog 밖에서 예외를
+   * 던지므로 드롭다운 같은 곳에 둘 때는 끈다.
+   */
+  dialogTitle?: boolean;
   ref?: React.Ref<DrillDownHandle>;
 }) {
   const views = useMemo(() => {
@@ -280,6 +288,7 @@ export function DrillDown({
               nav={nav}
               maxHeight={maxHeight}
               autoFocus={navigated.current}
+              dialogTitle={dialogTitle}
               onMeasure={onMeasure}
             />
           </motion.div>

@@ -38,5 +38,12 @@
   },
   "brandStack": {
     "publishedTo": "{brands}に投稿済み"
+  },
+  "moreMenu": {
+    "theme": "テーマ",
+    "back": "戻る",
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "自動"
   }
 }

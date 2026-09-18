@@ -38,5 +38,12 @@
   },
   "brandStack": {
     "publishedTo": "Publicado en {brands}"
+  },
+  "moreMenu": {
+    "theme": "Tema",
+    "back": "Atrás",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Auto"
   }
 }

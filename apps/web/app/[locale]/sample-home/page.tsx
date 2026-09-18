@@ -15,7 +15,7 @@ import Image from 'next/image';
 import SignInButton from '@/components/auth/sign-in-button';
 import { cn } from '@rillroot/ui/lib/utils';
 import BrandStack from './brand-stack';
-import HamburgerToggle from './hamburger-toggle';
+import MoreMenu from './more-menu';
 import { Sidebar } from './sidebar';
 
 export const metadata: Metadata = {
@@ -369,7 +369,11 @@ export default function SampleHomePage() {
       <div className="sticky top-0 z-20 flex h-14 items-center justify-center px-4.5 max-lg:bg-background lg:px-0">
         {/* 로고를 가운데에 두려면 더보기는 흐름에서 빼야 한다. lg 에서는 같은 토글이
             사이드바 하단에 있으므로 여기서는 숨긴다. */}
-        <HamburgerToggle className="absolute left-3 lg:hidden" />
+        <MoreMenu
+          side="bottom"
+          align="start"
+          className="absolute left-3 lg:hidden"
+        />
         <Image
           src="/rillroot-mark-brand.svg"
           alt="Rillroot"

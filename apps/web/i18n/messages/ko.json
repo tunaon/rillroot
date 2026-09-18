@@ -38,5 +38,12 @@
   },
   "brandStack": {
     "publishedTo": "{brands}에 게시됨"
+  },
+  "moreMenu": {
+    "theme": "테마",
+    "back": "뒤로",
+    "light": "라이트",
+    "dark": "다크",
+    "system": "자동"
   }
 }

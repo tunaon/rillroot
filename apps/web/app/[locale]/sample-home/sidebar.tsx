@@ -14,7 +14,7 @@ import { useTranslations } from 'next-intl';
 import { useLayoutEffect, useRef, useState } from 'react';
 import BrandStack from './brand-stack';
 import ComposerDialog from './composer-dialog';
-import HamburgerToggle from './hamburger-toggle';
+import MoreMenu from './more-menu';
 import WaveBackground from './wave-background';
 
 const FOCUS =
@@ -264,7 +264,7 @@ export function Sidebar() {
           'group-data-collapsed:flex-col group-data-collapsed:gap-1'
         )}
       >
-        <HamburgerToggle className="w-full" />
+        <MoreMenu side="top" align="start" className="w-full" />
       </div>
     </aside>
   );
