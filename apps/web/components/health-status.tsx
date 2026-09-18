@@ -180,10 +180,14 @@ export default function HealthStatus({ health }: Props) {
           variant="default"
           className="cursor-pointer p-0.5"
           value={theme}
-          onClick={({ currentTarget: { value } }) =>
-            isTheme(value) &&
-            setThemeWithTransition(value === 'light' ? 'dark' : 'light')
-          }
+          onClick={(e) => {
+            e.preventDefault();
+            return (
+              theme &&
+              isTheme(theme) &&
+              setThemeWithTransition(theme === 'light' ? 'dark' : 'light')
+            );
+          }}
         >
           {theme === 'light' ? <MoonIcon size={16} /> : <SunIcon size={16} />}
         </Button>
