@@ -6,6 +6,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
+  --color-canvas: var(--canvas);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -114,65 +117,75 @@
   }
 }
 
+/* 색 값은 PRD 11장 디자인 시스템 v0.1 기준.
+ * shadcn 컴포넌트는 bg-background 를 흰 surface 의미로 쓰므로 background 를 surface 에 두고,
+ * 앱 전체 바탕은 canvas 로 분리한다. */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --canvas: oklch(0.973 0.003 264.5); /* #f5f6f8 */
+  --background: oklch(1 0 0); /* #ffffff */
+  --foreground: oklch(0.237 0.02 258.4); /* #191f28 */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.237 0.02 258.4);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.93 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.237 0.02 258.4);
+  /* 라이트 브랜드는 흰 면 위에서 떠 보이지 않도록 #b8f34a 를 같은 색 범위(ΔE 0.046) 안에서 깊게 잡는다. */
+  --brand: oklch(0.8503 0.2184 127.04); /* #a7e607 */
+  --brand-foreground: oklch(0.237 0.02 258.4); /* #191f28 */
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-foreground);
+  --secondary: oklch(0.988 0.002 247.8); /* #fafbfc */
+  --secondary-foreground: oklch(0.237 0.02 258.4);
+  --muted: oklch(0.988 0.002 247.8);
+  --muted-foreground: oklch(0.666 0.021 252.9); /* #8b95a1 */
+  --accent: oklch(0.988 0.002 247.8);
+  --accent-foreground: oklch(0.237 0.02 258.4);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.943 0.006 264.5); /* #eaecf0 */
+  --input: oklch(0.943 0.006 264.5);
+  --ring: var(--brand);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.237 0.02 258.4);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: var(--brand-foreground);
+  --sidebar-accent: oklch(0.988 0.002 247.8);
+  --sidebar-accent-foreground: oklch(0.237 0.02 258.4);
+  --sidebar-border: oklch(0.943 0.006 264.5);
+  --sidebar-ring: var(--brand);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.309 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --canvas: oklch(0.196 0.006 271.1); /* #141518 */
+  --background: oklch(0.231 0.008 274.6); /* #1c1d21 */
+  --foreground: oklch(0.97 0.007 124.4); /* #f4f6f1 */
+  --card: oklch(0.231 0.008 274.6);
+  --card-foreground: oklch(0.97 0.007 124.4);
+  --popover: oklch(0.231 0.008 274.6);
+  --popover-foreground: oklch(0.97 0.007 124.4);
+  --brand: oklch(0.893 0.201 126.9); /* #b8f34a */
+  --brand-foreground: oklch(0.237 0.02 258.4); /* #191f28 */
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-foreground);
+  --secondary: oklch(0.261 0.012 270.9); /* #22242a */
+  --secondary-foreground: oklch(0.97 0.007 124.4);
+  --muted: oklch(0.261 0.012 270.9);
+  --muted-foreground: oklch(0.678 0.018 259.4); /* #9198a3 */
+  --accent: oklch(0.261 0.012 270.9);
+  --accent-foreground: oklch(0.97 0.007 124.4);
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.985 0 0);
-  --sidebar-primary-foreground: oklch(0.205 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --border: oklch(0.305 0.013 267.1); /* #2c2f36 */
+  --input: oklch(0.305 0.013 267.1);
+  --ring: var(--brand);
+  --sidebar: oklch(0.231 0.008 274.6);
+  --sidebar-foreground: oklch(0.97 0.007 124.4);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: var(--brand-foreground);
+  --sidebar-accent: oklch(0.261 0.012 270.9);
+  --sidebar-accent-foreground: oklch(0.97 0.007 124.4);
+  --sidebar-border: oklch(0.305 0.013 267.1);
+  --sidebar-ring: var(--brand);
 }
 
 @layer base {
@@ -204,7 +217,12 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-canvas text-foreground;
+  }
+
+  a,
+  button {
+    cursor: pointer;
   }
 
   /* Show scrollbar */
