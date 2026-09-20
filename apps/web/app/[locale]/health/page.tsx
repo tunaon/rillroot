@@ -27,7 +27,7 @@ export default async function HealthStatusPage() {
   const healthStatus = await getHealthStatus();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-8">
+    <main className="flex grow flex-col items-center justify-center gap-8">
       <HealthStatus health={healthStatus} />
     </main>
   );

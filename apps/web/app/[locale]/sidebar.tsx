@@ -103,6 +103,8 @@ export function Sidebar() {
   const t = useTranslations('sidebar');
 
   const [collapsed, setCollapsed] = useState(false);
+  // 사이드바가 레이아웃에 있어 이 상태는 페이지를 옮겨도 유지된다. 두 번째 실 라우트가
+  // 생기면 URL 과 어긋나므로 usePathname 기준으로 바꿔야 한다.
   const [active, setActive] = useState('recommend');
 
   const navRef = useRef<HTMLElement>(null);
@@ -177,11 +179,13 @@ export function Sidebar() {
   };
 
   return (
-    // aside 는 페이지가 튕겨도 제자리에 있도록 fixed 라 흐름에서 빠진다. 이 래퍼가 그리드 칸을
+    // aside 는 페이지가 튕겨도 제자리에 있도록 fixed 라 흐름에서 빠진다. 이 래퍼가 flex 칸을
     // 같은 폭으로 차지하고, aside 는 그 폭을 물려받아 접힘 전환도 함께 따라간다.
+    // aside 의 w-[inherit] 은 flex 가 계산한 사용 너비가 아니라 상속된 width 값을 받으므로,
+    // 래퍼가 수축하면 둘이 어긋난다. 옆 기둥이 flex-1(basis 0) 이라 지금은 수축하지 않는다.
     <div
       data-collapsed={collapsed || undefined}
-      className="lg:row-span-3 lg:w-62 lg:transition-[width] lg:duration-300 lg:ease-out-expo lg:data-collapsed:w-18"
+      className="lg:w-62 lg:transition-[width] lg:duration-300 lg:ease-out-expo lg:data-collapsed:w-18"
     >
       <aside
         data-collapsed={collapsed || undefined}
