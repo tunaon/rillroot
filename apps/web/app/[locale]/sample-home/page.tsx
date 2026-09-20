@@ -4,10 +4,10 @@ import Image from 'next/image';
 import SignInButton from '@/components/auth/sign-in-button';
 import { cn } from '@rillroot/ui/lib/utils';
 import { getTranslations } from 'next-intl/server';
-import BodyWave from './body-wave';
-import Feeds from './feeds';
-import MoreMenu from './more-menu';
-import { Sidebar } from './sidebar';
+import BodyWave from '../body-wave';
+import Feeds from '../feeds';
+import MoreMenu from '../more-menu';
+import { Sidebar } from '../sidebar';
 
 export const metadata: Metadata = {
   title: 'Rillroot Sample Home',
