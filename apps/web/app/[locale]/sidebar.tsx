@@ -108,6 +108,7 @@ export function Sidebar() {
   // 생기면 URL 과 어긋나므로 usePathname 기준으로 바꿔야 한다.
   const [active, setActive] = useState('recommend');
 
+  const composerTriggerRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const plateRef = useRef<HTMLSpanElement>(null);
   const pipRef = useRef<HTMLSpanElement>(null);
@@ -157,6 +158,7 @@ export function Sidebar() {
       return (
         <Fragment key={id}>
           <button
+            ref={composerTriggerRef}
             type="button"
             onClick={() => setComposerOpen(true)}
             aria-haspopup="dialog"
@@ -168,6 +170,7 @@ export function Sidebar() {
           <ComposerDialog
             open={composerOpen}
             onOpenChange={setComposerOpen}
+            triggerRef={composerTriggerRef}
           />
         </Fragment>
       );

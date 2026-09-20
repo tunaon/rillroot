@@ -33,6 +33,12 @@ const DIALOG_SIZE = {
 interface Props extends React.PropsWithChildren {
   open?: boolean;
   onOpenChange?(open: boolean): void;
+  /**
+   * 닫을 때 포커스를 돌려줄 여는 버튼. Radix 는 onCloseAutoFocus 에서 preventDefault 후
+   * 자기 트리거를 부르는데, 트리거가 없으면 그 preventDefault 가 FocusScope 의 기본 복귀까지
+   * 막아 포커스가 body 로 떨어진다. 그래서 여기로 직접 잇는다.
+   */
+  triggerRef?: React.RefObject<HTMLElement | null>;
   title?: string | React.ReactNode;
   description?: string;
   isPreventOutsideClick?: boolean;
@@ -50,6 +56,7 @@ interface Props extends React.PropsWithChildren {
 export default function ResponsiveDialog({
   open,
   onOpenChange,
+  triggerRef,
   title,
   description,
   children,
@@ -72,6 +79,13 @@ export default function ResponsiveDialog({
     onOpenChange?.(next); // 컨트롤드든 아니든 항상 알린다
   };
 
+  // ref 가 없으면 Radix 의 기본 처리에 맡긴다. 그쪽도 빈 트리거를 부를 뿐이라 결과는 같다.
+  const restoreFocus = (event: Event) => {
+    if (!triggerRef?.current) return;
+    event.preventDefault();
+    triggerRef.current.focus();
+  };
+
   return isDesktop ? (
     <Dialog
       key={`responsive-dialog-${id}`}
@@ -82,6 +96,7 @@ export default function ResponsiveDialog({
         showCloseButton={showCloseButton}
         preventOutsideClick={isPreventOutsideClick}
         onEscapeKeyDown={onEscapeKeyDown}
+        onCloseAutoFocus={restoreFocus}
         // bleed 면 p-6 을 걷어내고 모서리를 잘라낸다. clip 을 쓰는 이유는 hidden 이
         // 스크롤 컨테이너가 되기 때문 — 안쪽에서 focus() 한 번에 밀릴 수 있다.
         className={cn(DIALOG_SIZE[size], bleed && 'overflow-clip p-0')}
@@ -106,6 +121,7 @@ export default function ResponsiveDialog({
       <DrawerContent
         preventOutsideClick={isPreventOutsideClick}
         onEscapeKeyDown={onEscapeKeyDown}
+        onCloseAutoFocus={restoreFocus}
         className={cn(bleed && 'overflow-clip')}
       >
         {/* 시트 자체는 화면 끝까지 깔되 안쪽만 720px 로 묶는다. Drawer 는 1024px

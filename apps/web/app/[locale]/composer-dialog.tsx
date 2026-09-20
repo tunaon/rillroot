@@ -54,9 +54,11 @@ const FORMATS: { icon: LucideIcon; key: string }[] = [
 export default function ComposerDialog({
   open,
   onOpenChange,
+  triggerRef,
 }: {
   open: boolean;
   onOpenChange(open: boolean): void;
+  triggerRef: React.RefObject<HTMLElement | null>;
 }) {
   const t = useTranslations('composer');
   // 헤더 액션은 DrillDownView 의 prop 이라 DrillDown 바깥에서 만들어진다.
@@ -67,6 +69,7 @@ export default function ComposerDialog({
     <ResponsiveDialog
       open={open}
       onOpenChange={onOpenChange}
+      triggerRef={triggerRef}
       bleed
       showCloseButton={false}
       onEscapeKeyDown={(event) => {
