@@ -1,4 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import type { Profile } from '@rillroot/shared';
 import type { Database } from '@rillroot/supabase';
 import type { SignIn } from '../auth/auth.guard';
 import { SupabaseService } from '../supabase/supabase.service';
@@ -6,12 +7,6 @@ import { digitsForAttempt, generateHandle } from './handle';
 
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
-
-/** 응답에 담는 값. 접속 기록은 통계용이므로 내보내지 않는다. */
-type Profile = Pick<
-  ProfileRow,
-  'id' | 'handle' | 'display_name' | 'avatar_url' | 'created_at' | 'updated_at'
->;
 
 /** 이번 요청에서 알아낸 접속 정보. */
 export interface Visit {
