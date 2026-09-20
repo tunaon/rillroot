@@ -1,6 +1,6 @@
 'use client';
 
-import type { Profile } from '@/lib/auth';
+import type { Profile } from '@rillroot/shared';
 import { createContext, useContext } from 'react';
 
 const AuthContext = createContext<Profile | null>(null);

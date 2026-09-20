@@ -1,6 +1,7 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
+import { healthQueryOptions } from '@/modules/health/queries';
 import { type Theme, isTheme } from '@rillroot/shared';
 import { Badge } from '@rillroot/ui/components/badge';
 import { Button } from '@rillroot/ui/components/button';
@@ -12,21 +13,12 @@ import {
 } from '@rillroot/ui/components/card';
 import { Progress } from '@rillroot/ui/components/progress';
 import { cn } from '@rillroot/ui/lib/utils';
+import { useQuery } from '@tanstack/react-query';
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
-export interface HealthResponse {
-  status: string;
-  app: string;
-  supabase: string;
-  timestamp: string;
-}
-interface Props {
-  health: HealthResponse;
-}
 
 function StatusBadge({ label, status }: { label: string; status: string }) {
   const variant =
@@ -75,9 +67,16 @@ const TOAST_SAMPLES = [
   },
 ];
 
-export default function HealthStatus({ health }: Props) {
+export default function HealthStatus() {
   const t = useTranslations();
   const { setTheme, theme } = useTheme();
+
+  const {
+    data: health,
+    isPending,
+    isError,
+    error,
+  } = useQuery(healthQueryOptions);
 
   const [progress, setProgress] = useState(0);
 
@@ -97,7 +96,8 @@ export default function HealthStatus({ health }: Props) {
     }
   };
 
-  if (health.status === 'error') {
+  // 조회 실패를 빈 값으로 위장하지 않는다. API가 못 뜬 것과 상태가 나쁜 것은 다른 일이다.
+  if (isError) {
     return (
       <div className="w-full max-w-sm flex flex-col gap-3">
         <Card className="rounded-md border border-destructive">
@@ -107,14 +107,14 @@ export default function HealthStatus({ health }: Props) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">{health.app}</p>
+            <p className="text-sm text-muted-foreground">{error.message}</p>
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  if (!health) {
+  if (isPending) {
     return (
       <div className="w-full max-w-sm flex flex-col gap-3">
         <Card>

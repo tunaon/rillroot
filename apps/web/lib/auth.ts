@@ -1,16 +1,8 @@
 import { DEFAULT_LOCALE } from '@/i18n/locales';
 import { createClient } from '@/lib/supabase/server';
-import { localeToCountryCode } from '@rillroot/shared';
+import { profileApi } from '@/modules/profile/api';
+import { type Profile, localeToCountryCode } from '@rillroot/shared';
 import { headers } from 'next/headers';
-
-export interface Profile {
-  id: string;
-  handle: string;
-  display_name: string;
-  avatar_url: string | null;
-  created_at: string;
-  updated_at: string;
-}
 
 /**
  * 로그인한 사용자의 프로필을 가져온다. 프로필이 아직 없으면 API가 이때 만든다.
@@ -19,12 +11,7 @@ export interface Profile {
  * @returns 프로필, 비회원이면 null
  */
 export async function getCurrentProfile(): Promise<Profile | null> {
-  const supabase = await createClient();
-
-  // 여기서는 access token만 꺼내 API로 넘긴다. 세션에 담긴 사용자 정보로
-  // 권한을 판단하지 않으며, 검증은 토큰을 받은 API가 서명으로 수행한다.
-  const { data } = await supabase.auth.getSession();
-  const token = data.session?.access_token;
+  const token = await getToken();
 
   if (!token) {
     return null;
@@ -37,24 +24,20 @@ export async function getCurrentProfile(): Promise<Profile | null> {
     localeToCountryCode(DEFAULT_LOCALE);
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/profiles/me`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          ...(country && { 'x-country': country }),
-        },
-        // 캐시되면 로그인 직후 화면을 다시 그려도 비회원 응답이 그대로 재사용된다.
-        cache: 'no-store',
-      }
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    return (await response.json()) as Profile;
+    return await profileApi.me({ token, country });
   } catch {
     return null;
   }
+}
+
+/**
+ * 세션에서 access token만 꺼낸다. 세션에 담긴 사용자 정보로 권한을 판단하지 않으며,
+ * 검증은 토큰을 받은 API가 서명으로 수행한다.
+ *
+ * @returns access token, 비회원이면 undefined
+ */
+export async function getToken(): Promise<string | undefined> {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getSession();
+  return data.session?.access_token;
 }
