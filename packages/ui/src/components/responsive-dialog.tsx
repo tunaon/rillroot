@@ -1,6 +1,7 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { Slot } from 'radix-ui';
+import { useId, useRef, useState } from 'react';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { cn } from '../lib/utils';
 import {
@@ -27,18 +28,11 @@ const DIALOG_SIZE = {
   lg: 'sm:max-w-2xl', // 42rem
 } as const;
 
-// 트리거는 받지 않는다. isDesktop 이 바뀌면 Dialog 와 Drawer 가 통째로 교체되므로 안에 둔
-// 트리거는 DOM 이 새로 생겨 등장 애니메이션과 포커스를 잃는다. 여는 버튼은 호출부가 갖고
-// open 만 내려준다.
 interface Props extends React.PropsWithChildren {
   open?: boolean;
   onOpenChange?(open: boolean): void;
-  /**
-   * 닫을 때 포커스를 돌려줄 여는 버튼. Radix 는 onCloseAutoFocus 에서 preventDefault 후
-   * 자기 트리거를 부르는데, 트리거가 없으면 그 preventDefault 가 FocusScope 의 기본 복귀까지
-   * 막아 포커스가 body 로 떨어진다. 그래서 여기로 직접 잇는다.
-   */
-  triggerRef?: React.RefObject<HTMLElement | null>;
+  /** 모달을 여는 요소. 하나의 요소여야 하며 여는 동작과 aria 속성이 여기에 합쳐진다. */
+  trigger?: React.ReactElement;
   title?: string | React.ReactNode;
   description?: string;
   isPreventOutsideClick?: boolean;
@@ -56,7 +50,7 @@ interface Props extends React.PropsWithChildren {
 export default function ResponsiveDialog({
   open,
   onOpenChange,
-  triggerRef,
+  trigger,
   title,
   description,
   children,
@@ -72,6 +66,8 @@ export default function ResponsiveDialog({
   const hasHeader = Boolean(title || description);
   const [_open, _setOpen] = useState<boolean>(false);
 
+  const triggerRef = useRef<HTMLElement>(null);
+
   const isControlled = open !== undefined;
   const modalOpen = isControlled ? open : _open;
   const handleOpenChange = (next: boolean) => {
@@ -79,14 +75,16 @@ export default function ResponsiveDialog({
     onOpenChange?.(next); // 컨트롤드든 아니든 항상 알린다
   };
 
-  // ref 가 없으면 Radix 의 기본 처리에 맡긴다. 그쪽도 빈 트리거를 부를 뿐이라 결과는 같다.
+  // Radix 는 onCloseAutoFocus 에서 항상 preventDefault 를 부른 뒤 자기 DialogTrigger 를
+  // 포커스한다. 그 preventDefault 가 FocusScope 의 기본 복귀까지 막으므로, 트리거를 쓰지 않는
+  // 이상 포커스를 직접 돌려줘야 body 로 떨어지지 않는다.
   const restoreFocus = (event: Event) => {
-    if (!triggerRef?.current) return;
+    if (!triggerRef.current) return;
     event.preventDefault();
     triggerRef.current.focus();
   };
 
-  return isDesktop ? (
+  const modal = isDesktop ? (
     <Dialog
       key={`responsive-dialog-${id}`}
       open={modalOpen}
@@ -147,5 +145,26 @@ export default function ResponsiveDialog({
         </div>
       </DrawerContent>
     </Drawer>
+  );
+
+  // 트리거는 isDesktop 삼항 바깥에 둔다. useMediaQuery 의 서버 스냅샷이 모바일이라
+  // 하이드레이션 직후 데스크톱에서 Dialog 와 Drawer 가 한 번 통째로 교체되는데, 그 안에 두면
+  // 버튼 DOM 이 새로 생겨 등장 애니메이션이 처음부터 다시 돌고 포커스도 끊긴다.
+  // 그래서 Radix 의 DialogTrigger 대신 여는 동작과 aria 를 직접 합친다.
+  return (
+    <>
+      {trigger && (
+        <Slot.Root
+          ref={triggerRef}
+          onClick={() => handleOpenChange(true)}
+          aria-haspopup="dialog"
+          aria-expanded={modalOpen}
+          data-state={modalOpen ? 'open' : 'closed'}
+        >
+          {trigger}
+        </Slot.Root>
+      )}
+      {modal}
+    </>
   );
 }
