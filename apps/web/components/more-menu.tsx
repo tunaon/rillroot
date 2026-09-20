@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@rillroot/ui/components/dropdown-menu';
+import HamburgerToggle from '@rillroot/ui/components/hamburger-toggle';
 import {
   RadioGroup,
   RadioGroupItem,
@@ -25,7 +26,6 @@ import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import HamburgerToggle from './hamburger-toggle';
 
 const ITEM =
   'rounded-lg p-2 text-xs lg:text-sm font-medium focus:bg-foreground/8 [&_svg]:size-4.5';

@@ -1,10 +1,10 @@
 import '@/assets/styles/globals.css';
+import BodyWave from '@/components/body-wave';
 import RootContext from '@/providers';
 import { cn } from '@rillroot/ui/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { getLocale } from 'next-intl/server';
 import { Inter } from 'next/font/google';
-import BodyWave from './body-wave';
 import { Sidebar } from './sidebar';
 import TopBar from './top-bar';
 

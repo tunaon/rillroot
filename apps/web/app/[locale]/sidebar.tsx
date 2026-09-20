@@ -1,5 +1,9 @@
 'use client';
 
+import BrandStack from '@/components/brand-stack';
+import ComposerDialog from '@/components/composer-dialog';
+import MoreMenu from '@/components/more-menu';
+import WaveBackground from '@/components/wave-background';
 import { useProfile } from '@/providers/auth-context';
 import { cn } from '@rillroot/ui/lib/utils';
 import {
@@ -12,10 +16,6 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useLayoutEffect, useRef, useState } from 'react';
-import BrandStack from './brand-stack';
-import ComposerDialog from './composer-dialog';
-import MoreMenu from './more-menu';
-import WaveBackground from './wave-background';
 
 const FOCUS =
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';

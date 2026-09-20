@@ -1,6 +1,6 @@
 import { cn } from '@rillroot/ui/lib/utils';
 import { getTranslations } from 'next-intl/server';
-import Feeds from './feeds';
+import Feeds from '@/components/feeds';
 
 export default async function Home() {
   const t = await getTranslations();

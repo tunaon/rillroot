@@ -1,8 +1,7 @@
-import Image from 'next/image';
-
 import SignInButton from '@/components/auth/sign-in-button';
+import MoreMenu from '@/components/more-menu';
 import { cn } from '@rillroot/ui/lib/utils';
-import MoreMenu from './more-menu';
+import Image from 'next/image';
 
 export default function TopBar() {
   return (
