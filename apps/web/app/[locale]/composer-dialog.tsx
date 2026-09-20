@@ -23,7 +23,7 @@ import {
   Underline,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 const HEADER_ACTION =
   'rounded-md px-1 text-sm transition-colors duration-220 ease-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
@@ -52,12 +52,13 @@ const FORMATS: { icon: LucideIcon; key: string }[] = [
 ];
 
 export default function ComposerDialog({
-  trigger,
+  open,
+  onOpenChange,
 }: {
-  trigger: React.ReactNode;
+  open: boolean;
+  onOpenChange(open: boolean): void;
 }) {
   const t = useTranslations('composer');
-  const [open, setOpen] = useState(false);
   // 헤더 액션은 DrillDownView 의 prop 이라 DrillDown 바깥에서 만들어진다.
   // useDrillDown 이 닿지 않으므로 ref 핸들로 잇는다.
   const drill = useRef<DrillDownHandle>(null);
@@ -65,8 +66,7 @@ export default function ComposerDialog({
   return (
     <ResponsiveDialog
       open={open}
-      onOpenChange={setOpen}
-      trigger={trigger}
+      onOpenChange={onOpenChange}
       bleed
       showCloseButton={false}
       onEscapeKeyDown={(event) => {
@@ -82,7 +82,7 @@ export default function ComposerDialog({
           leading={
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={() => onOpenChange(false)}
               className={HEADER_ACTION}
             >
               {t('cancel')}

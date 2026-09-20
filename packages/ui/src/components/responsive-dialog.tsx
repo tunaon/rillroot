@@ -9,7 +9,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from './dialog';
 import {
   Drawer,
@@ -17,7 +16,6 @@ import {
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from './drawer';
 
 // Dialog 는 lg(64rem) 이상에서만 렌더되므로 DialogContent 의 기본값 sm:max-w-lg 가 항상 걸려 있다.
@@ -29,10 +27,12 @@ const DIALOG_SIZE = {
   lg: 'sm:max-w-2xl', // 42rem
 } as const;
 
+// 트리거는 받지 않는다. isDesktop 이 바뀌면 Dialog 와 Drawer 가 통째로 교체되므로 안에 둔
+// 트리거는 DOM 이 새로 생겨 등장 애니메이션과 포커스를 잃는다. 여는 버튼은 호출부가 갖고
+// open 만 내려준다.
 interface Props extends React.PropsWithChildren {
   open?: boolean;
   onOpenChange?(open: boolean): void;
-  trigger?: React.ReactNode;
   title?: string | React.ReactNode;
   description?: string;
   isPreventOutsideClick?: boolean;
@@ -50,7 +50,6 @@ interface Props extends React.PropsWithChildren {
 export default function ResponsiveDialog({
   open,
   onOpenChange,
-  trigger,
   title,
   description,
   children,
@@ -79,7 +78,6 @@ export default function ResponsiveDialog({
       open={modalOpen}
       onOpenChange={handleOpenChange}
     >
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent
         showCloseButton={showCloseButton}
         preventOutsideClick={isPreventOutsideClick}
@@ -105,7 +103,6 @@ export default function ResponsiveDialog({
       open={modalOpen}
       onOpenChange={handleOpenChange}
     >
-      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent
         preventOutsideClick={isPreventOutsideClick}
         onEscapeKeyDown={onEscapeKeyDown}

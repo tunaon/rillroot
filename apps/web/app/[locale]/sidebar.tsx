@@ -11,7 +11,7 @@ import {
   User,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import BrandStack from './brand-stack';
 import ComposerDialog from './composer-dialog';
 import MoreMenu from './more-menu';
@@ -103,6 +103,7 @@ export function Sidebar() {
   const t = useTranslations('sidebar');
 
   const [collapsed, setCollapsed] = useState(false);
+  const [composerOpen, setComposerOpen] = useState(false);
   // 사이드바가 레이아웃에 있어 이 상태는 페이지를 옮겨도 유지된다. 두 번째 실 라우트가
   // 생기면 URL 과 어긋나므로 usePathname 기준으로 바꿔야 한다.
   const [active, setActive] = useState('recommend');
@@ -149,16 +150,26 @@ export function Sidebar() {
       </>
     );
 
+    // 버튼은 다이얼로그 바깥에 둔다. ResponsiveDialog 는 뷰포트 폭에 따라 Dialog 와 Drawer 를
+    // 통째로 갈아 끼우는데, 서버 스냅샷이 모바일이라 하이드레이션 직후 데스크톱에서 한 번 교체된다.
+    // 트리거를 그 안에 두면 버튼 DOM 이 새로 생겨 등장 애니메이션이 처음부터 다시 돈다.
     if (compose) {
       return (
-        <ComposerDialog
-          key={id}
-          trigger={
-            <button type="button" className={`${NAV_LINK} ${delay}`}>
-              {content}
-            </button>
-          }
-        />
+        <Fragment key={id}>
+          <button
+            type="button"
+            onClick={() => setComposerOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={composerOpen}
+            className={`${NAV_LINK} ${delay}`}
+          >
+            {content}
+          </button>
+          <ComposerDialog
+            open={composerOpen}
+            onOpenChange={setComposerOpen}
+          />
+        </Fragment>
       );
     }
 
@@ -251,8 +262,8 @@ export function Sidebar() {
           ))}
 
           {/* <div className="flex flex-col gap-0.5 max-lg:hidden group-data-collapsed:mt-4.5 lg:mt-4.5">
-          {USER_GROUPS.map(renderItem)}
-        </div> */}
+            {USER_GROUPS.map(renderItem)}
+          </div> */}
         </nav>
 
         {/* BrandStack 이 div 라 p 가 아닌 div 로 감싼다. 어순은 언어마다 달라 문구 쪽이 위치를 정한다. */}
