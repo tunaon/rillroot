@@ -32,7 +32,8 @@ const INDICATOR =
 
 type NavItem = {
   id: string;
-  label: string;
+  /** sidebar 네임스페이스 안의 번역 키. */
+  labelKey: string;
   icon: LucideIcon;
   // 활성일 때만 다른 아이콘을 쓰는 항목이 있다. 없으면 icon 을 그대로 쓴다.
   activeIcon?: LucideIcon;
@@ -49,19 +50,19 @@ type NavItem = {
 
 const RECOMMEND: NavItem = {
   id: 'recommend',
-  label: 'Recommend',
+  labelKey: 'recommend',
   icon: Egg,
   activeIcon: EggFried,
-  delay: '[animation-delay:.36s]',
+  delay: '[animation-delay:.3s]',
 };
 
 const USER_GROUPS: NavItem[] = [
   {
     id: 'profile',
-    label: 'Profile',
+    labelKey: 'profile',
     icon: User,
     activeClass: 'fill-current',
-    delay: '[animation-delay:.51s]',
+    delay: '[animation-delay:.5s]',
   },
   // {
   //   id: 'liked',
@@ -81,10 +82,12 @@ const GROUPS: NavItem[][] = [
   [
     RECOMMEND,
     {
-      id: 'new-topic',
-      label: 'New Topic',
+      // 토픽은 PRD 7장에서 글에 붙이는 태그를 가리키므로 작성 버튼에 쓰지 않는다.
+      // 데이터 모델·이벤트(post_published)·URL 이 모두 post 라 여기도 post 로 맞춘다.
+      id: 'newPost',
+      labelKey: 'newPost',
       icon: Plus,
-      delay: '[animation-delay:.41s]',
+      delay: '[animation-delay:.4s]',
       badge: true,
       compose: true,
     },
@@ -123,7 +126,7 @@ export function Sidebar() {
 
   const renderItem = ({
     id,
-    label,
+    labelKey,
     icon,
     activeIcon,
     activeClass,
@@ -137,7 +140,7 @@ export function Sidebar() {
     const content = (
       <>
         <ItemIcon className={cn('size-5 shrink-0', isActive && activeClass)} />
-        <span className={LABEL}>{label}</span>
+        <span className={LABEL}>{t(labelKey)}</span>
         {badge && (
           <span className="ml-auto size-1.5 rounded-full bg-destructive max-lg:hidden group-data-collapsed:absolute group-data-collapsed:top-2.5 group-data-collapsed:right-2.5 group-data-collapsed:ml-0" />
         )}
@@ -174,98 +177,105 @@ export function Sidebar() {
   };
 
   return (
-    <aside
+    // aside 는 페이지가 튕겨도 제자리에 있도록 fixed 라 흐름에서 빠진다. 이 래퍼가 그리드 칸을
+    // 같은 폭으로 차지하고, aside 는 그 폭을 물려받아 접힘 전환도 함께 따라간다.
+    <div
       data-collapsed={collapsed || undefined}
-      className={cn(
-        // 게스트는 물결 캔버스가 비치도록 테마 배경색을 깐다. glass-panel 은 background
-        // 단축 속성이라 함께 걸면 배경색을 덮어쓰므로 회원에게만 건다.
-        profile ? 'max-lg:glass-panel' : 'bg-background',
-        // 물결 배경의 -z-10 이 aside 밖으로 내려가지 않게 쌓임 맥락을 만든다.
-        'isolate',
-        'group fixed inset-x-0 bottom-0 z-30 flex h-12.5 items-center justify-around rounded-t-3xl px-3 animate-rise-in [animation-delay:.05s] motion-reduce:animate-none',
-        'lg:border lg:border-card-foreground lg:relative lg:inset-auto lg:h-auto lg:w-62 lg:flex-col lg:items-stretch lg:justify-start lg:rounded-2xl lg:rounded-t-2xl',
-        'lg:transition-[width] lg:duration-300 lg:ease-out-expo',
-        'lg:px-3.5 lg:py-4 lg:mt-3.5 lg:row-span-2 lg:animate-slide-l lg:data-collapsed:w-18'
-      )}
+      className="lg:row-span-3 lg:w-62 lg:transition-[width] lg:duration-300 lg:ease-out-expo lg:data-collapsed:w-18"
     >
-      {!profile && <WaveBackground />}
-
-      <button
-        type="button"
-        onClick={() => setCollapsed((v) => !v)}
-        aria-expanded={!collapsed}
-        aria-controls="sidebar-nav"
-        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      <aside
+        data-collapsed={collapsed || undefined}
         className={cn(
-          'absolute top-7 -right-3.5 z-10 size-7 cursor-pointer place-items-center rounded-full bg-background text-muted-foreground transition-colors duration-220 ease-soft',
-          'border border-muted-foreground hidden lg:grid',
-          `hover:text-foreground animate-pop-in [animation-delay:.7s] motion-reduce:animate-none ${FOCUS}`
+          // 게스트는 물결 캔버스가 비치도록 테마 배경색을 깐다. glass-panel 은 background
+          // 단축 속성이라 함께 걸면 배경색을 덮어쓰므로 회원에게만 건다.
+          profile ? 'glass-panel' : 'bg-background',
+          // 물결 배경의 -z-10 이 aside 밖으로 내려가지 않게 쌓임 맥락을 만든다.
+          'isolate',
+          'group fixed inset-x-0 bottom-0 z-30 flex h-12.5 items-center justify-around rounded-t-3xl px-3 animate-rise-in [animation-delay:.05s] motion-reduce:animate-none',
+          // 높이는 직접 갖는다. 7 = 위 mt-3.5 + 루트 아래 p-3.5. left 는 루트의 p-3.5.
+          'lg:border lg:border-card-foreground lg:inset-auto lg:top-0 lg:left-3.5 lg:h-[calc(100dvh-var(--spacing)*7)] lg:w-[inherit] lg:flex-col lg:items-stretch lg:justify-start lg:rounded-2xl lg:rounded-t-2xl',
+          'lg:px-3.5 lg:py-4 lg:mt-3.5 lg:animate-slide-l'
         )}
       >
-        <ChevronsLeft className="size-4 transition-[rotate] duration-300 ease-out-expo group-data-collapsed:rotate-180" />
-      </button>
+        {!profile && <WaveBackground />}
 
-      {/* 뷰포트가 낮아 메뉴가 넘치면 페이지가 아니라 nav 안쪽이 스크롤된다(토스의 사이드바 overflow:auto 와 같은 역할).
-          -mx/px 로 nav 박스를 aside 안쪽 가장자리까지 넓혀 활성 pip 이 잘리지 않게 한다. */}
-      <nav
-        ref={navRef}
-        id="sidebar-nav"
-        className={cn(
-          'relative flex max-lg:gap-1 lg:-mx-3.5 lg:min-h-0 lg:flex-col lg:overflow-y-auto lg:px-3.5 lg:scrollbar-thin',
-          // 비회원 메뉴는 하나뿐이라 모바일 하단 바는 소개 메시지로 대신한다.
-          !profile && 'max-lg:hidden'
-        )}
-      >
-        {/* 링크보다 앞에 두어 뒤에 깔린다(링크는 relative 라 위에 그려짐). */}
-        <span
-          ref={plateRef}
-          aria-hidden="true"
-          className={`${INDICATOR} inset-x-3.5 h-11 rounded-xl bg-foreground/12 animate-rise-in [animation-delay:.36s] motion-reduce:animate-none`}
-        />
-        <span
-          ref={pipRef}
-          aria-hidden="true"
-          className={`${INDICATOR} left-0 h-7 w-1 rounded-sm bg-foreground shadow-[0_0_10px] shadow-foreground/45 animate-grow-y [animation-delay:.68s] motion-reduce:animate-none`}
-        />
-
-        {(profile ? GROUPS : GUEST_GROUPS).map((items, i) => (
-          <div
-            key={i}
-            className={`flex flex-col gap-0.5 max-lg:contents ${i > 0 ? 'lg:mt-4.5' : ''}`}
-          >
-            {items.map(renderItem)}
-          </div>
-        ))}
-
-        {/* <div className="flex flex-col gap-0.5 max-lg:hidden group-data-collapsed:mt-4.5 lg:mt-4.5">
-          {USER_GROUPS.map(renderItem)}
-        </div> */}
-      </nav>
-
-      {/* BrandStack 이 div 라 p 가 아닌 div 로 감싼다. 어순은 언어마다 달라 문구 쪽이 위치를 정한다. */}
-      {!profile && (
-        <div
+        <button
+          type="button"
+          onClick={() => setCollapsed((v) => !v)}
+          aria-expanded={!collapsed}
+          aria-controls="sidebar-nav"
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           className={cn(
-            'lg:text-xl text-sm leading-7 text-foreground whitespace-nowrap',
-            'animate-rise-in [animation-delay:.41s] motion-reduce:animate-none',
-            // 메뉴 흐름과 무관하게 사이드바 높이의 가운데에 둔다. rise-in 은 transform 을,
-            // -translate-y 는 translate 속성을 쓰므로 등장 애니메이션과 겹치지 않는다.
-            'lg:absolute lg:inset-x-3.5 lg:top-1/2 lg:-translate-y-1/2 lg:px-2 lg:whitespace-normal group-data-collapsed:hidden'
+            'absolute top-7 -right-3.5 z-10 size-7 cursor-pointer place-items-center rounded-full bg-background text-muted-foreground transition-colors duration-220 ease-soft',
+            'border border-muted-foreground hidden lg:grid',
+            `hover:text-foreground animate-pop-in [animation-delay:.7s] motion-reduce:animate-none ${FOCUS}`
           )}
         >
-          {t.rich('guestIntro', { brands: () => <BrandStack inline /> })}
-        </div>
-      )}
+          <ChevronsLeft className="size-4 transition-[rotate] duration-300 ease-out-expo group-data-collapsed:rotate-180" />
+        </button>
 
-      <div
-        className={cn(
-          'flex items-center gap-1.5 animate-rise-in [animation-delay:.78s] motion-reduce:animate-none',
-          'lg:mt-auto lg:border-t lg:pt-3.5 max-lg:hidden',
-          'group-data-collapsed:flex-col group-data-collapsed:gap-1'
+        {/* 뷰포트가 낮아 메뉴가 넘치면 페이지가 아니라 nav 안쪽이 스크롤된다(토스의 사이드바 overflow:auto 와 같은 역할).
+          -mx/px 로 nav 박스를 aside 안쪽 가장자리까지 넓혀 활성 pip 이 잘리지 않게 한다. */}
+        <nav
+          ref={navRef}
+          id="sidebar-nav"
+          className={cn(
+            'relative flex max-lg:gap-1 lg:-mx-3.5 lg:min-h-0 lg:flex-col lg:overflow-y-auto lg:px-3.5 lg:scrollbar-thin',
+            // 비회원 메뉴는 하나뿐이라 모바일 하단 바는 소개 메시지로 대신한다.
+            !profile && 'max-lg:hidden'
+          )}
+        >
+          {/* 링크보다 앞에 두어 뒤에 깔린다(링크는 relative 라 위에 그려짐). */}
+          <span
+            ref={plateRef}
+            aria-hidden="true"
+            className={`${INDICATOR} inset-x-3.5 h-11 rounded-xl bg-foreground/12 animate-rise-in [animation-delay:.36s] motion-reduce:animate-none`}
+          />
+          <span
+            ref={pipRef}
+            aria-hidden="true"
+            className={`${INDICATOR} left-0 h-7 w-1 rounded-sm bg-foreground shadow-[0_0_10px] shadow-foreground/45 animate-grow-y [animation-delay:.68s] motion-reduce:animate-none`}
+          />
+
+          {(profile ? GROUPS : GUEST_GROUPS).map((items, i) => (
+            <div
+              key={i}
+              className={`flex flex-col gap-0.5 max-lg:contents ${i > 0 ? 'lg:mt-4.5' : ''}`}
+            >
+              {items.map(renderItem)}
+            </div>
+          ))}
+
+          {/* <div className="flex flex-col gap-0.5 max-lg:hidden group-data-collapsed:mt-4.5 lg:mt-4.5">
+          {USER_GROUPS.map(renderItem)}
+        </div> */}
+        </nav>
+
+        {/* BrandStack 이 div 라 p 가 아닌 div 로 감싼다. 어순은 언어마다 달라 문구 쪽이 위치를 정한다. */}
+        {!profile && (
+          <div
+            className={cn(
+              'lg:text-xl text-sm leading-7 text-foreground whitespace-nowrap',
+              'animate-rise-in [animation-delay:.41s] motion-reduce:animate-none',
+              // 메뉴 흐름과 무관하게 사이드바 높이의 가운데에 둔다. rise-in 은 transform 을,
+              // -translate-y 는 translate 속성을 쓰므로 등장 애니메이션과 겹치지 않는다.
+              'lg:absolute lg:inset-x-3.5 lg:top-1/2 lg:-translate-y-1/2 lg:px-2 lg:whitespace-normal group-data-collapsed:hidden'
+            )}
+          >
+            {t.rich('guestIntro', { brands: () => <BrandStack inline /> })}
+          </div>
         )}
-      >
-        <MoreMenu side="top" align="start" className="w-full" />
-      </div>
-    </aside>
+
+        <div
+          className={cn(
+            'flex items-center gap-1.5 animate-rise-in [animation-delay:.78s] motion-reduce:animate-none',
+            'lg:mt-auto lg:border-t lg:pt-3.5 max-lg:hidden',
+            'group-data-collapsed:flex-col group-data-collapsed:gap-1'
+          )}
+        >
+          <MoreMenu side="top" align="start" className="w-full" />
+        </div>
+      </aside>
+    </div>
   );
 }

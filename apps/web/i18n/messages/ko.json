@@ -34,7 +34,37 @@
     }
   },
   "sidebar": {
-    "guestIntro": "로그인을 하고 <brands></brands>에 동시 배포 해보세요."
+    "guestIntro": "로그인을 하고 <brands></brands>에 동시 배포 해보세요.",
+    "recommend": "추천",
+    "newPost": "새 글",
+    "profile": "프로필"
+  },
+  "composer": {
+    "title": "새 글",
+    "cancel": "취소",
+    "publish": "발행",
+    "prompt": "어떤 이야기를 써볼까요?",
+    "tools": {
+      "photo": "사진",
+      "emoji": "이모지",
+      "sticker": "스티커",
+      "poll": "투표",
+      "text": "텍스트 첨부",
+      "location": "위치",
+      "music": "음악"
+    },
+    "textView": {
+      "title": "텍스트 첨부",
+      "done": "완료",
+      "placeholder": "내용을 더 추가해보세요…"
+    },
+    "formats": {
+      "bold": "굵게",
+      "italic": "기울임",
+      "underline": "밑줄",
+      "strikethrough": "취소선",
+      "highlight": "강조"
+    }
   },
   "brandStack": {
     "publishedTo": "{brands}에 게시됨"

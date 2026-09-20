@@ -34,7 +34,37 @@
     }
   },
   "sidebar": {
-    "guestIntro": "ログインして<brands></brands> に同時投稿しましょう。"
+    "guestIntro": "ログインして<brands></brands> に同時投稿しましょう。",
+    "recommend": "おすすめ",
+    "newPost": "新規投稿",
+    "profile": "プロフィール"
+  },
+  "composer": {
+    "title": "新規投稿",
+    "cancel": "キャンセル",
+    "publish": "公開",
+    "prompt": "どんな話を書きますか？",
+    "tools": {
+      "photo": "写真",
+      "emoji": "絵文字",
+      "sticker": "ステッカー",
+      "poll": "アンケート",
+      "text": "テキスト添付",
+      "location": "位置情報",
+      "music": "音楽"
+    },
+    "textView": {
+      "title": "テキスト添付",
+      "done": "完了",
+      "placeholder": "本文を追加しましょう…"
+    },
+    "formats": {
+      "bold": "太字",
+      "italic": "斜体",
+      "underline": "下線",
+      "strikethrough": "取り消し線",
+      "highlight": "ハイライト"
+    }
   },
   "brandStack": {
     "publishedTo": "{brands}に投稿済み"

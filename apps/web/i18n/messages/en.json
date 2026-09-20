@@ -34,7 +34,37 @@
     }
   },
   "sidebar": {
-    "guestIntro": "Sign in and publish to <brands></brands> at once."
+    "guestIntro": "Sign in and publish to <brands></brands> at once.",
+    "recommend": "Recommend",
+    "newPost": "New Post",
+    "profile": "Profile"
+  },
+  "composer": {
+    "title": "New Post",
+    "cancel": "Cancel",
+    "publish": "Publish",
+    "prompt": "What would you like to write?",
+    "tools": {
+      "photo": "Photo",
+      "emoji": "Emoji",
+      "sticker": "Sticker",
+      "poll": "Poll",
+      "text": "Text attachment",
+      "location": "Location",
+      "music": "Music"
+    },
+    "textView": {
+      "title": "Text attachment",
+      "done": "Done",
+      "placeholder": "Add more to your post…"
+    },
+    "formats": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "underline": "Underline",
+      "strikethrough": "Strikethrough",
+      "highlight": "Highlight"
+    }
   },
   "brandStack": {
     "publishedTo": "Published to {brands}"

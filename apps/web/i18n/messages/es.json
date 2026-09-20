@@ -34,7 +34,37 @@
     }
   },
   "sidebar": {
-    "guestIntro": "Inicia sesión y publica en <brands></brands> a la vez."
+    "guestIntro": "Inicia sesión y publica en <brands></brands> a la vez.",
+    "recommend": "Recomendados",
+    "newPost": "Nueva publicación",
+    "profile": "Perfil"
+  },
+  "composer": {
+    "title": "Nueva publicación",
+    "cancel": "Cancelar",
+    "publish": "Publicar",
+    "prompt": "¿Sobre qué quieres escribir?",
+    "tools": {
+      "photo": "Foto",
+      "emoji": "Emoji",
+      "sticker": "Pegatina",
+      "poll": "Encuesta",
+      "text": "Texto adjunto",
+      "location": "Ubicación",
+      "music": "Música"
+    },
+    "textView": {
+      "title": "Texto adjunto",
+      "done": "Listo",
+      "placeholder": "Añade más a tu publicación…"
+    },
+    "formats": {
+      "bold": "Negrita",
+      "italic": "Cursiva",
+      "underline": "Subrayado",
+      "strikethrough": "Tachado",
+      "highlight": "Resaltado"
+    }
   },
   "brandStack": {
     "publishedTo": "Publicado en {brands}"

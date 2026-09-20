@@ -6,7 +6,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --color-canvas: var(--canvas);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-background: var(--background);
@@ -117,20 +116,22 @@
   }
 }
 
-/* 색 값은 PRD 11장 디자인 시스템 v0.1 기준.
- * shadcn 컴포넌트는 bg-background 를 흰 surface 의미로 쓰므로 background 를 surface 에 두고,
- * 앱 전체 바탕은 canvas 로 분리한다. */
+/* 색 값은 PRD 11장 디자인 시스템 v0.1 기준. */
 :root {
-  --canvas: oklch(0.973 0.003 264.5); /* #f5f6f8 */
-  --background: oklch(1 0 0); /* #ffffff */
+  --background: oklch(0.97 0.004 271.4); /* #f8f5f4 */
   --foreground: oklch(0.237 0.02 258.4); /* #191f28 */
-  --card: oklch(1 0 0);
+  --card: oklch(0.97 0.004 271.4);
   --card-foreground: oklch(0.237 0.02 258.4);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.97 0.004 271.4);
   --popover-foreground: oklch(0.237 0.02 258.4);
-  /* 라이트 브랜드는 흰 면 위에서 떠 보이지 않도록 #b8f34a 를 같은 색 범위(ΔE 0.046) 안에서 깊게 잡는다. */
-  --brand: oklch(0.8503 0.2184 127.04); /* #a7e607 */
+  /* 라이트 브랜드는 흰 면 위에서 떠 보이지 않도록 #b8f34a 를 같은 색 범위(ΔE 0.084) 안에서 깊게 잡는다. */
+  --brand: oklch(0.81 0.215 127.04); /* #9bd800 */
   --brand-foreground: oklch(0.237 0.02 258.4); /* #191f28 */
+  /* 물결 배경에서 브랜드 색과 번갈아 흐르는 둘째 색. 배경과 같은 색상각에서 빛 쪽으로만
+   * 띄워, 이 색이 칠해지는 자리는 배경에 녹고 브랜드 리본만 남게 한다. */
+  --wave-accent: oklch(0.829 0.004 271.4); /* #fbfaf9 */
+  /* 바이올렛 컬러 */
+  /* --wave-accent: oklch(0.55 0.27 290); */
   --primary: var(--brand);
   --primary-foreground: var(--brand-foreground);
   --secondary: oklch(0.988 0.002 247.8); /* #fafbfc */
@@ -145,7 +146,7 @@
   --input: oklch(0.943 0.006 264.5);
   --ring: var(--brand);
   --radius: 0.625rem;
-  --sidebar: oklch(1 0 0);
+  --sidebar: oklch(0.97 0.004 271.4);
   --sidebar-foreground: oklch(0.237 0.02 258.4);
   --sidebar-primary: var(--brand);
   --sidebar-primary-foreground: var(--brand-foreground);
@@ -153,10 +154,19 @@
   --sidebar-accent-foreground: oklch(0.237 0.02 258.4);
   --sidebar-border: oklch(0.943 0.006 264.5);
   --sidebar-ring: var(--brand);
+
+  /* 유리 표면. surface 는 뒤 배경 위에 얹는 색, solid 는 투명도를 줄인 환경의 대체색이다.
+   * rim 은 빛을 받는 위 모서리, rim-low 는 그늘지는 아래 모서리다. */
+  --glass-filter: saturate(180%) brightness(1.06);
+  --glass-surface: oklch(0.97 0.004 271.4 / 0.34);
+  --glass-surface-thin: oklch(0.97 0.004 271.4 / 0.55);
+  --glass-solid: oklch(0.97 0.004 271.4);
+  --glass-rim: oklch(0.97 0.004 271.4 / 0.8);
+  --glass-rim-low: oklch(0.237 0.02 258.4 / 0.08);
+  --glass-shadow: oklch(0.237 0.02 258.4 / 0.1);
 }
 
 .dark {
-  --canvas: oklch(0.196 0.006 271.1); /* #141518 */
   --background: oklch(0.231 0.008 274.6); /* #1c1d21 */
   --foreground: oklch(0.97 0.007 124.4); /* #f4f6f1 */
   --card: oklch(0.231 0.008 274.6);
@@ -165,6 +175,10 @@
   --popover-foreground: oklch(0.97 0.007 124.4);
   --brand: oklch(0.893 0.201 126.9); /* #b8f34a */
   --brand-foreground: oklch(0.237 0.02 258.4); /* #191f28 */
+  /* #3b3d44 */
+  --wave-accent: oklch(0.36 0.008 274.6);
+  /* 바이올렛 컬러 */
+  /* --wave-accent: oklch(0.55 0.27 290); */
   --primary: var(--brand);
   --primary-foreground: var(--brand-foreground);
   --secondary: oklch(0.261 0.012 270.9); /* #22242a */
@@ -173,7 +187,7 @@
   --muted-foreground: oklch(0.678 0.018 259.4); /* #9198a3 */
   --accent: oklch(0.261 0.012 270.9);
   --accent-foreground: oklch(0.97 0.007 124.4);
-  --destructive: oklch(0.396 0.141 25.723);
+  --destructive: oklch(0.637 0.237 25.331);
   --destructive-foreground: oklch(0.637 0.237 25.331);
   --border: oklch(0.305 0.013 267.1); /* #2c2f36 */
   --input: oklch(0.305 0.013 267.1);
@@ -186,6 +200,15 @@
   --sidebar-accent-foreground: oklch(0.97 0.007 124.4);
   --sidebar-border: oklch(0.305 0.013 267.1);
   --sidebar-ring: var(--brand);
+
+  /* 어두운 테마의 유리는 뒤를 밝히지 않고 눌러야 짙어진다. */
+  --glass-filter: saturate(150%) brightness(0.78);
+  --glass-surface: oklch(0.231 0.008 274.6 / 0.3);
+  --glass-surface-thin: oklch(0.231 0.008 274.6 / 0.55);
+  --glass-solid: oklch(0.231 0.008 274.6);
+  --glass-rim: oklch(0.97 0.004 271.4 / 0.14);
+  --glass-rim-low: oklch(0 0 0 / 0.45);
+  --glass-shadow: oklch(0 0 0 / 0.5);
 }
 
 @layer base {
@@ -217,7 +240,7 @@
   }
 
   body {
-    @apply bg-canvas text-foreground;
+    @apply bg-background text-foreground;
   }
 
   a,
@@ -243,67 +266,38 @@
   }
 }
 
-/* liquid glass 표면. foreground 를 옅게 섞어 dark 에선 밝아지고 light 에선 어두워진다.
- * 4-stop 그라디언트는 from/via/to 로 표현할 수 없어 유틸리티로 둔다. */
+/* liquid glass 표면. 뒤 배경을 흐리고 채도를 올린 위에 표면색을 옅게 얹고,
+ * 가장자리에 빛과 그늘의 선을 둬 면이 떠 보이게 한다.
+ *
+ * foreground 를 섞어 덮던 이전 방식은 다크에서 흰 막이 되어 탁했다. 어두운 테마는
+ * 배경을 밝히는 대신 눌러야(brightness < 1) 짙은 유리가 된다.
+ * 굴절(feDisplacementMap)은 사파리·파이어폭스가 backdrop 에 적용하지 못해 넣지 않는다. */
 @utility glass-panel {
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--color-foreground) 6%, transparent) 0%,
-    color-mix(in oklab, var(--color-foreground) 6.5%, transparent) 13%,
-    color-mix(in oklab, var(--color-foreground) 4.8%, transparent) 34%,
-    color-mix(in oklab, var(--color-foreground) 4.5%, transparent) 100%
-  );
-  backdrop-filter: blur(18px) saturate(115%);
+  background-color: var(--glass-solid);
+  box-shadow:
+    inset 0 1px 0 var(--glass-rim),
+    inset 0 -1px 0 var(--glass-rim-low),
+    0 8px 32px var(--glass-shadow);
+
+  /* OS 에서 투명도를 줄인 사용자에게는 불투명 면만 남긴다. */
+  @media (prefers-reduced-transparency: no-preference) {
+    background-color: var(--glass-surface);
+    -webkit-backdrop-filter: blur(9px) var(--glass-filter);
+    backdrop-filter: blur(9px) var(--glass-filter);
+  }
 }
 
+/* 면이 넓을수록 유리가 두꺼워 보이도록 더 흐리고 더 투명하게 둔다. */
 @utility glass-card {
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--color-foreground) 9%, transparent) 0%,
-    color-mix(in oklab, var(--color-foreground) 12.5%, transparent) 24%,
-    color-mix(in oklab, var(--color-foreground) 12%, transparent) 78%,
-    color-mix(in oklab, var(--color-foreground) 10.5%, transparent) 100%
-  );
-  backdrop-filter: blur(26px) saturate(118%);
-}
+  background-color: var(--glass-solid);
+  box-shadow:
+    inset 0 1px 0 var(--glass-rim),
+    inset 0 -1px 0 var(--glass-rim-low),
+    0 18px 50px var(--glass-shadow);
 
-/* 등장 안무의 코다: 표면 위를 한 번 스치는 사선 광택 */
-@utility sheen {
-  position: relative;
-  overflow: hidden;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 38%;
-    pointer-events: none;
-    background: linear-gradient(
-      100deg,
-      transparent 0%,
-      color-mix(in oklab, var(--color-foreground) 14%, transparent) 50%,
-      transparent 100%
-    );
-    animation: sheen 1.55s var(--ease-soft) 2.55s 1 both;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &::after {
-      display: none;
-    }
-  }
-}
-
-/* skewX(-18deg) 는 띠의 윗변을 tan(18°)·(높이/2) 만큼 오른쪽으로, 아랫변을 같은 양만큼
- * 왼쪽으로 민다. 이동량은 띠 자신의 너비(카드의 38%) 기준이라 카드가 높을수록 그 삼각형이
- * 양 끝에서 카드 안으로 더 많이 삐져나온다. animation-fill-mode: both 때문에 지연 구간
- * 내내 from 위치가 보이므로 시작 값도 끝 값만큼 여유가 필요하다.
- * -250%/400% 는 카드 높이 2000px 까지 좌상단·우하단 모두 카드 밖에 두는 값이다. */
-@keyframes sheen {
-  from {
-    transform: translate3d(-250%, 0, 0) skewX(-18deg);
-  }
-  to {
-    transform: translate3d(400%, 0, 0) skewX(-18deg);
+  @media (prefers-reduced-transparency: no-preference) {
+    background-color: var(--glass-surface-thin);
+    -webkit-backdrop-filter: blur(18px) var(--glass-filter);
+    backdrop-filter: blur(18px) var(--glass-filter);
   }
 }

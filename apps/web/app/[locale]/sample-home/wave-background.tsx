@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@rillroot/ui/lib/utils';
 import { useReducedMotion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 
@@ -19,8 +20,15 @@ precision highp float;
 uniform vec2 u_resolution;
 uniform float u_time;
 uniform vec3 u_brand;
+// 브랜드 색과 번갈아 흐르는 둘째 색. --wave-accent 토큰에서 읽는다.
+uniform vec3 u_accent;
+// 물결이 흐르는 방향(라디안). 0 이면 가로로 눕는다.
+uniform float u_angle;
+// 무늬의 잘기. 값이 클수록 같은 상자 안에 물결이 더 여러 번 지나간다.
+uniform float u_scale;
+// 색의 농도. 1 이면 기본, 크면 물결이 짙어진다.
+uniform float u_gain;
 
-const vec3 VIOLET = vec3(0.49, 0.25, 1.0);
 const float PI = 3.14159265;
 // 넘실대는 주기(초)와 그중 크게 움직이는 구간의 비율
 const float SURGE_PERIOD = 6.0;
@@ -48,7 +56,7 @@ vec4 over(vec4 dst, vec3 color, float alpha) {
 
 void main() {
   // 긴 변을 기준으로 두어, 좁은 기둥이든 납작한 바든 물결이 긴 방향을 따라 꽉 찬다.
-  vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / max(u_resolution.x, u_resolution.y) * 3.0;
+  vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / max(u_resolution.x, u_resolution.y) * u_scale;
   float t = u_time;
 
   // 느리게 흐르다가 주기마다 한 번 앞으로 크게 밀려난다. 위상은 줄지 않아 되감기지 않는다.
@@ -57,8 +65,8 @@ void main() {
   float phase = t * 0.08 + 0.9 * (floor(cycle) + smoothstep(0.0, 1.0, surgeT));
   float swell = 1.0 + 0.35 * sin(PI * surgeT);
 
-  // 왼쪽 아래에서 오른쪽 위로 향하는 축. p.x 는 띠를 따라, p.y 는 띠를 가로지른다.
-  float angle = 0.85;
+  // 띠를 따라가는 축. p.x 는 띠를 따라, p.y 는 띠를 가로지른다.
+  float angle = u_angle;
   vec2 p = mat2(cos(angle), sin(angle), -sin(angle), cos(angle)) * uv;
 
   float center = swell * (
@@ -73,13 +81,13 @@ void main() {
   float face = edge * (0.55 * exp(-max(d, 0.0) * 4.0) + 0.2 * exp(-max(d, 0.0) * 1.5));
   float back = (1.0 - edge) * exp(d * 4.5) * 0.35;
 
-  // 띠를 따라 브랜드 색과 보라가 번갈아 흐른다.
-  // 두 색을 고르게 섞으면 중간이 회색으로 탁해지므로, 전환 구간을 좁혀 어느 한쪽 색에 머물게 한다.
+  // 띠를 따라 브랜드 색과 둘째 색이 번갈아 흐른다.
+  // 두 색을 고르게 섞으면 중간이 탁해지므로, 전환 구간을 좁혀 어느 한쪽 색에 머물게 한다.
   float tone = smoothstep(0.3, 0.7, 0.5 + 0.5 * sin(p.x * 1.1 - phase * 1.8 + noise(uv * 1.4 + phase) * 2.2));
-  vec3 surface = mix(u_brand, VIOLET, tone);
-  // 접힌 가장자리에는 짙은 보라 선을 둬 면이 접힌 깊이를 만든다.
-  vec3 faceColor = mix(VIOLET * 0.9, surface, smoothstep(-0.02, 0.18, d));
-  vec3 backColor = mix(VIOLET, u_brand, tone);
+  vec3 surface = mix(u_brand, u_accent, tone);
+  // 접힌 가장자리에는 조금 짙은 둘째 색 선을 둬 면이 접힌 깊이를 만든다.
+  vec3 faceColor = mix(u_accent * 0.9, surface, smoothstep(-0.02, 0.18, d));
+  vec3 backColor = mix(u_accent, u_brand, tone);
 
   vec2 b1 = vec2(0.35 * sin(t * 0.13), 0.55 * cos(t * 0.11));
   vec2 b2 = vec2(-0.3 * cos(t * 0.09 + 1.0), -0.5 * sin(t * 0.12 + 2.0));
@@ -87,10 +95,10 @@ void main() {
   float blob2 = exp(-dot(uv - b2, uv - b2) * 4.5) * 0.3;
 
   vec4 color = vec4(0.0);
-  color = over(color, u_brand, blob1);
-  color = over(color, VIOLET, blob2);
-  color = over(color, backColor, back);
-  color = over(color, faceColor, face);
+  color = over(color, u_brand, min(blob1 * u_gain, 1.0));
+  color = over(color, u_accent, min(blob2 * u_gain, 1.0));
+  color = over(color, backColor, min(back * u_gain, 1.0));
+  color = over(color, faceColor, min(face * u_gain, 1.0));
 
   gl_FragColor = color;
 }
@@ -101,11 +109,30 @@ const MAX_PIXEL_RATIO = 1.5;
 // 모션을 줄인 사용자에게 보여줄 정지 화면의 시각
 const STILL_TIME = 8;
 
+// 왼쪽 아래에서 오른쪽 위로 향하는 기본 축
+const DEFAULT_ANGLE = 0.85;
+// 사이드바처럼 세로로 긴 상자를 한 번의 물결이 가로지르는 값
+const DEFAULT_SCALE = 3;
+
 /**
  * 부모를 꽉 채우는 물결 배경. 투명 캔버스에 그리므로 부모의 배경색이 테마를 따라가고,
  * 물결의 브랜드 색은 --brand 토큰에서 읽는다.
  */
-export default function WaveBackground() {
+export default function WaveBackground({
+  angle = DEFAULT_ANGLE,
+  scale = DEFAULT_SCALE,
+  gain = 1,
+  className,
+}: {
+  /** 물결이 흐르는 방향(라디안). 0 이면 가로. */
+  angle?: number;
+  /** 무늬의 잘기. 납작한 띠에는 큰 값을 줘야 무늬가 잘린 것처럼 보이지 않는다. */
+  scale?: number;
+  /** 색의 농도. 1 이 기본이고, 마스크로 옅어지는 자리를 보완할 때 올린다. */
+  gain?: number;
+  /** 감싸는 상자의 배치. 생략하면 부모를 꽉 채운다. */
+  className?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = useReducedMotion();
 
@@ -135,6 +162,10 @@ export default function WaveBackground() {
     const uResolution = gl.getUniformLocation(program, 'u_resolution');
     const uTime = gl.getUniformLocation(program, 'u_time');
     const uBrand = gl.getUniformLocation(program, 'u_brand');
+    const uAccent = gl.getUniformLocation(program, 'u_accent');
+    gl.uniform1f(gl.getUniformLocation(program, 'u_angle'), angle);
+    gl.uniform1f(gl.getUniformLocation(program, 'u_scale'), scale);
+    gl.uniform1f(gl.getUniformLocation(program, 'u_gain'), gain);
 
     const start = performance.now();
     let frame = 0;
@@ -162,19 +193,23 @@ export default function WaveBackground() {
     const probe = document
       .createElement('canvas')
       .getContext('2d', { willReadFrequently: true });
-    const readBrand = () => {
+    const readToken = (name: string, location: WebGLUniformLocation | null) => {
       if (!probe) return;
       const value = getComputedStyle(document.documentElement)
-        .getPropertyValue('--brand')
+        .getPropertyValue(name)
         .trim();
       probe.clearRect(0, 0, 1, 1);
       probe.fillStyle = value;
       probe.fillRect(0, 0, 1, 1);
       const [r = 0, g = 0, b = 0] = probe.getImageData(0, 0, 1, 1).data;
-      gl.uniform3f(uBrand, r / 255, g / 255, b / 255);
+      gl.uniform3f(location, r / 255, g / 255, b / 255);
+    };
+    const readColors = () => {
+      readToken('--brand', uBrand);
+      readToken('--wave-accent', uAccent);
     };
 
-    readBrand();
+    readColors();
 
     // 크기를 바꾸면 캔버스가 지워지므로 정지 화면은 다시 그린다.
     const resize = new ResizeObserver(() => {
@@ -187,9 +222,9 @@ export default function WaveBackground() {
     });
     resize.observe(canvas);
 
-    // 테마를 바꾸면 <html> class 가 바뀌고 --brand 값도 달라진다.
+    // 테마를 바꾸면 <html> class 가 바뀌고 색 토큰 값도 달라진다.
     const theme = new MutationObserver(() => {
-      readBrand();
+      readColors();
       if (reduced) draw(STILL_TIME);
     });
     theme.observe(document.documentElement, {
@@ -210,12 +245,15 @@ export default function WaveBackground() {
       // 잃어버린 컨텍스트를 그대로 돌려줘 아무것도 그려지지 않는다.
       gl.deleteProgram(program);
     };
-  }, [reduced]);
+  }, [angle, scale, gain, reduced]);
 
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden rounded-[inherit]"
+      className={cn(
+        'pointer-events-none absolute inset-0 -z-10 overflow-hidden rounded-[inherit]',
+        className
+      )}
     >
       <canvas ref={canvasRef} className="absolute inset-0 size-full" />
     </div>
