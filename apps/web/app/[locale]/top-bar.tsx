@@ -31,10 +31,10 @@ export default function TopBar() {
         <Image
           src="/rillroot-mark-brand.svg"
           alt="Rillroot"
-          width={34}
-          height={34}
+          width={40}
+          height={40}
           loading="eager"
-          className="size-8.5 shrink-0"
+          className="size-10 shrink-0"
         />
         {/* 더보기와 같은 이유로 흐름에서 빼낸다. 흐름에 두면 로고가 왼쪽으로 밀린다. */}
         <SignInButton className="absolute right-3" />
