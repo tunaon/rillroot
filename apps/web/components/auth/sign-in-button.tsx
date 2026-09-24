@@ -76,7 +76,7 @@ export default function SignInButton({ className }: Props) {
             </span>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={signOut}>
+          <DropdownMenuItem variant="destructive" onSelect={signOut}>
             <LogOut />
             {t('signOut')}
           </DropdownMenuItem>
