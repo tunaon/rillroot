@@ -14,6 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
+      connection_attempts: {
+        Row: {
+          channel: string
+          created_at: string
+          expires_at: string
+          payload: Json
+          profile_id: string
+          state: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          expires_at: string
+          payload: Json
+          profile_id: string
+          state: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          expires_at?: string
+          payload?: Json
+          profile_id?: string
+          state?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connection_attempts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_segments: {
+        Row: {
+          body: string
+          id: string
+          position: number
+          post_id: string
+        }
+        Insert: {
+          body: string
+          id?: string
+          position: number
+          post_id: string
+        }
+        Update: {
+          body?: string
+          id?: string
+          position?: number
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_segments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          author_id: string
+          created_at: string
+          id: string
+          language: string | null
+          published_at: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string
+          id?: string
+          language?: string | null
+          published_at?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string
+          id?: string
+          language?: string | null
+          published_at?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -50,12 +152,110 @@ export type Database = {
         }
         Relationships: []
       }
+      social_connections: {
+        Row: {
+          account_name: string
+          channel: string
+          config: Json
+          created_at: string
+          expires_at: string | null
+          external_id: string
+          id: string
+          invalidated_at: string | null
+          profile_id: string
+          secret_id: string
+          updated_at: string
+        }
+        Insert: {
+          account_name: string
+          channel: string
+          config?: Json
+          created_at?: string
+          expires_at?: string | null
+          external_id: string
+          id?: string
+          invalidated_at?: string | null
+          profile_id: string
+          secret_id: string
+          updated_at?: string
+        }
+        Update: {
+          account_name?: string
+          channel?: string
+          config?: Json
+          created_at?: string
+          expires_at?: string | null
+          external_id?: string
+          id?: string
+          invalidated_at?: string | null
+          profile_id?: string
+          secret_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_connections_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_post: {
+        Args: {
+          p_author_id: string
+          p_language: string
+          p_publish: boolean
+          p_segments: string[]
+          p_title: string
+        }
+        Returns: string
+      }
+      mark_connection_invalid: {
+        Args: { p_connection_id: string; p_profile_id?: string }
+        Returns: boolean
+      }
+      read_connection_secret: {
+        Args: { p_connection_id: string }
+        Returns: string
+      }
+      update_connection_secret: {
+        Args: {
+          p_connection_id: string
+          p_expires_at?: string
+          p_secret: string
+        }
+        Returns: boolean
+      }
+      update_post: {
+        Args: {
+          p_author_id: string
+          p_language: string
+          p_post_id: string
+          p_publish: boolean
+          p_segments: Json
+          p_title: string
+        }
+        Returns: boolean
+      }
+      upsert_social_connection: {
+        Args: {
+          p_account_name: string
+          p_channel: string
+          p_config?: Json
+          p_expires_at?: string
+          p_external_id: string
+          p_profile_id: string
+          p_secret: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
