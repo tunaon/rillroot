@@ -2,6 +2,7 @@ import { Toaster } from '@rillroot/ui/components/sonner';
 
 import { getCurrentProfile } from '@/lib/auth';
 import AuthContextProvider from '@/providers/auth-context';
+import LandingContext from '@/providers/landing-context';
 import NextIntlContext from '@/providers/next-intl-context';
 import QueryClientContext from '@/providers/query-client-context';
 import ThemeContext from '@/providers/theme-context';
@@ -27,7 +28,9 @@ export default async function RootContext({
         disableTransitionOnChange
       >
         <AuthContextProvider profile={profile}>
-          <QueryClientContext>{children}</QueryClientContext>
+          <QueryClientContext>
+            <LandingContext>{children}</LandingContext>
+          </QueryClientContext>
         </AuthContextProvider>
         <Toaster />
       </ThemeContext>
