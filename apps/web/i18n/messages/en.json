@@ -43,28 +43,33 @@
     "title": "New Post",
     "cancel": "Cancel",
     "publish": "Publish",
-    "prompt": "What would you like to write?",
-    "tools": {
-      "photo": "Photo",
-      "emoji": "Emoji",
-      "sticker": "Sticker",
-      "poll": "Poll",
-      "text": "Text attachment",
-      "location": "Location",
-      "music": "Music"
-    },
-    "textView": {
-      "title": "Text attachment",
-      "done": "Done",
-      "placeholder": "Add more to your post…"
-    },
-    "formats": {
-      "bold": "Bold",
-      "italic": "Italic",
-      "underline": "Underline",
-      "strikethrough": "Strikethrough",
-      "highlight": "Highlight"
-    }
+    "saveDraft": "Save draft",
+    "saving": "Saving…",
+    "placeholderFirst": "What would you like to write?",
+    "placeholderNext": "Continue in a new segment…",
+    "segment": "Segment {n}",
+    "addSegment": "Add segment",
+    "removeSegment": "Remove segment",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "drafts": "Drafts",
+    "newPost": "New post",
+    "emptyDraft": "Empty draft",
+    "savedDraft": "Draft saved",
+    "published": "Published",
+    "saveFailed": "Couldn't save. Please try again.",
+    "tooLong": "Over the {max, number} character limit",
+    "emptySegments": "Fill or remove the empty segments to publish",
+    "channels": "Channels",
+    "connectChannel": "Connect {channel}",
+    "reconnectChannel": "Reconnect {channel}",
+    "needsReconnect": "Reconnect",
+    "toggleChannel": "Post to {channel} as {account}",
+    "connectFailed": "Couldn't start connecting. Please try again.",
+    "channelConnected": "{channel} account connected",
+    "channelConnectDenied": "{channel} connection was cancelled",
+    "channelTaken": "This {channel} account is already connected",
+    "channelConnectFailed": "Couldn't connect your {channel} account. Please try again."
   },
   "brandStack": {
     "publishedTo": "Published to {brands}"

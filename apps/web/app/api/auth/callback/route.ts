@@ -1,3 +1,4 @@
+import { internalPath } from '@/lib/internal-path';
 import { createClient } from '@/lib/supabase/server';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -24,13 +25,4 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.redirect(`${origin}${next}`);
-}
-
-/** 외부 주소로 보내는 공격을 막기 위해 내부 경로만 허용한다. */
-function internalPath(value: string | null): string {
-  if (!value?.startsWith('/') || value.startsWith('//')) {
-    return '/';
-  }
-
-  return value;
 }

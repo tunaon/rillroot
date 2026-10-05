@@ -1,7 +1,7 @@
 'use client';
 
 import BrandStack from '@/components/brand-stack';
-import ComposerDialog from '@/components/composer-dialog';
+import Composer from '@/components/composer/composer';
 import MoreMenu from '@/components/more-menu';
 import WaveBackground from '@/components/wave-background';
 import { useProfile } from '@/providers/auth-context';
@@ -151,7 +151,7 @@ export function Sidebar() {
 
     if (compose) {
       return (
-        <ComposerDialog
+        <Composer
           key={id}
           trigger={
             <button type="button" className={`${NAV_LINK} ${delay}`}>

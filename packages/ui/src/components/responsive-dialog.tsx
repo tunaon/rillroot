@@ -26,7 +26,15 @@ const DIALOG_SIZE = {
   sm: 'sm:max-w-90 p-4', // 22.5rem
   md: '', // DialogContent 기본값 32rem
   lg: 'sm:max-w-2xl', // 42rem
+  'max-drawer': '',
 } as const;
+
+const DRAWER_SIZE = {
+  sm: '',
+  md: '',
+  lg: '',
+  'max-drawer': '!max-h-[92dvh] h-full',
+};
 
 interface Props extends React.PropsWithChildren {
   open?: boolean;
@@ -36,7 +44,7 @@ interface Props extends React.PropsWithChildren {
   title?: string | React.ReactNode;
   description?: string;
   isPreventOutsideClick?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'max-drawer';
   showCloseButton?: boolean;
   /**
    * children 을 컨테이너 가장자리까지 붙인다. 안쪽이 자기 헤더나 구분선을 그려
@@ -120,11 +128,13 @@ export default function ResponsiveDialog({
         preventOutsideClick={isPreventOutsideClick}
         onEscapeKeyDown={onEscapeKeyDown}
         onCloseAutoFocus={restoreFocus}
-        className={cn(bleed && 'overflow-clip')}
+        className={cn(bleed && 'overflow-clip', DRAWER_SIZE[size])}
       >
         {/* 시트 자체는 화면 끝까지 깔되 안쪽만 720px 로 묶는다. Drawer 는 1024px
-            미만 전 구간을 담당해서, 태블릿 폭에서는 전체 너비로 늘어지면 읽기 어렵다. */}
-        <div className="mx-auto w-full max-w-180">
+            미만 전 구간을 담당해서, 태블릿 폭에서는 전체 너비로 늘어지면 읽기 어렵다.
+            flex 열과 min-h-0 은 DrawerContent 의 최대 높이를 children 까지 잇는다.
+            끊기면 children 이 자기 내용만큼 자라 잘리고, 안쪽 스크롤이 생기지 않는다. */}
+        <div className="mx-auto flex min-h-0 w-full max-w-180 flex-col">
           {hasHeader && (
             <DrawerHeader>
               {title && <DrawerTitle>{title}</DrawerTitle>}

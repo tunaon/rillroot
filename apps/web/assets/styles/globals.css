@@ -164,6 +164,11 @@
   --glass-rim: oklch(0.97 0.004 271.4 / 0.8);
   --glass-rim-low: oklch(0.237 0.02 258.4 / 0.08);
   --glass-shadow: oklch(0.237 0.02 258.4 / 0.1);
+
+  --X-twitter: var(--foreground);
+  --threads: var(--foreground);
+  --bluesky: #1185fe;
+  --linkedin: #0a66c2;
 }
 
 .dark {
@@ -284,6 +289,18 @@
     background-color: var(--glass-surface);
     -webkit-backdrop-filter: blur(9px) var(--glass-filter);
     backdrop-filter: blur(9px) var(--glass-filter);
+  }
+}
+
+/* 작성 편집기의 플레이스홀더. 비어 있을 때 첫 문단에 data-placeholder 가 붙는다.
+   float 와 height 0 으로 문단 흐름 밖에 두어 캐럿이 글자 앞에 그대로 선다. */
+@layer components {
+  .tiptap p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+    color: var(--muted-foreground);
   }
 }
 

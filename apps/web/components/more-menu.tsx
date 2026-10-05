@@ -44,7 +44,7 @@ export default function MoreMenu({
   const profile = useProfile();
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
-  // 뒤로 버튼은 DrillDownView 의 prop 이라 DrillDown 바깥에서 만들어진다. ComposerDialog 와 같이 ref 로 잇는다.
+  // 뒤로 버튼은 DrillDownView 의 prop 이라 DrillDown 바깥에서 만들어진다. ref 핸들로 잇는다.
   const drill = useRef<DrillDownHandle>(null);
   // 진행 중인 테마 전환. 전환 동안에는 화면이 스냅샷으로 덮여 모든 클릭이 <html> 로
   // 가므로, 메뉴 안을 누른 클릭도 바깥 클릭으로 판정된다.

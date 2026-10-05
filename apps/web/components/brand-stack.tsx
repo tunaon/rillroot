@@ -1,6 +1,6 @@
 'use client';
 
-import { Icons } from '@rillroot/ui/components/icons';
+import { BRANDS as BRAND } from '@/lib/brands';
 import {
   AnimatePresence,
   type Transition,
@@ -10,30 +10,8 @@ import {
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 
-// fill 은 각 브랜드의 공식 색. X 와 Threads 는 브랜드 컬러가 실제로 #000000 이라
-// 그대로 쓰면 다크 모드에서 사라진다 — 그 둘만 --foreground 로 테마를 따라간다.
-// (simple-icons 16.30.0 기준. LinkedIn 은 상표권 요청으로 제거되기 전 값.)
-const BRANDS = [
-  { key: 'x', label: 'X', Icon: Icons.brand.x, fill: 'var(--foreground)' },
-  {
-    key: 'threads',
-    label: 'Threads',
-    Icon: Icons.brand.threads,
-    fill: 'var(--foreground)',
-  },
-  {
-    key: 'linkedin',
-    label: 'LinkedIn',
-    Icon: Icons.brand.linkedin,
-    fill: '#0A66C2',
-  },
-  {
-    key: 'bluesky',
-    label: 'Bluesky',
-    Icon: Icons.brand.bluesky,
-    fill: '#1185FE',
-  },
-] as const;
+// 스택에 돌릴 브랜드와 그 순서. 로고와 색은 lib/brands 가 갖는다.
+const BRANDS = [BRAND.x, BRAND.threads, BRAND.linkedin, BRAND.bluesky] as const;
 
 // 아래 x 값들은 이 칩 크기 기준의 px 이다. size 를 바꾸면 같은 비율로 환산해서
 // 간격이 따라가게 한다 — 오프셋만 28px 에 묶여 있으면 칩만 커지고 스택이 뭉친다.

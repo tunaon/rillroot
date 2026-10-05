@@ -43,28 +43,33 @@
     "title": "新規投稿",
     "cancel": "キャンセル",
     "publish": "公開",
-    "prompt": "どんな話を書きますか？",
-    "tools": {
-      "photo": "写真",
-      "emoji": "絵文字",
-      "sticker": "ステッカー",
-      "poll": "アンケート",
-      "text": "テキスト添付",
-      "location": "位置情報",
-      "music": "音楽"
-    },
-    "textView": {
-      "title": "テキスト添付",
-      "done": "完了",
-      "placeholder": "本文を追加しましょう…"
-    },
-    "formats": {
-      "bold": "太字",
-      "italic": "斜体",
-      "underline": "下線",
-      "strikethrough": "取り消し線",
-      "highlight": "ハイライト"
-    }
+    "saveDraft": "下書きを保存",
+    "saving": "保存中…",
+    "placeholderFirst": "どんな話を書きますか？",
+    "placeholderNext": "新しいセグメントに続きを書く…",
+    "segment": "セグメント {n}",
+    "addSegment": "セグメントを追加",
+    "removeSegment": "セグメントを削除",
+    "moveUp": "上へ移動",
+    "moveDown": "下へ移動",
+    "drafts": "下書き",
+    "newPost": "新規投稿",
+    "emptyDraft": "空の下書き",
+    "savedDraft": "下書きを保存しました",
+    "published": "公開しました",
+    "saveFailed": "保存できませんでした。もう一度お試しください。",
+    "tooLong": "上限の{max, number}文字を超えています",
+    "emptySegments": "公開するには空のセグメントを埋めるか削除してください",
+    "channels": "チャンネル",
+    "connectChannel": "{channel}を連携",
+    "reconnectChannel": "{channel}を再連携",
+    "needsReconnect": "再連携",
+    "toggleChannel": "{account}として{channel}に投稿",
+    "connectFailed": "連携を開始できませんでした。もう一度お試しください。",
+    "channelConnected": "{channel}アカウントを連携しました",
+    "channelConnectDenied": "{channel}の連携をキャンセルしました",
+    "channelTaken": "この{channel}アカウントはすでに連携されています",
+    "channelConnectFailed": "{channel}アカウントを連携できませんでした。もう一度お試しください。"
   },
   "brandStack": {
     "publishedTo": "{brands}に投稿済み"

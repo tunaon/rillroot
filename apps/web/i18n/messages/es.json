@@ -43,28 +43,33 @@
     "title": "Nueva publicación",
     "cancel": "Cancelar",
     "publish": "Publicar",
-    "prompt": "¿Sobre qué quieres escribir?",
-    "tools": {
-      "photo": "Foto",
-      "emoji": "Emoji",
-      "sticker": "Pegatina",
-      "poll": "Encuesta",
-      "text": "Texto adjunto",
-      "location": "Ubicación",
-      "music": "Música"
-    },
-    "textView": {
-      "title": "Texto adjunto",
-      "done": "Listo",
-      "placeholder": "Añade más a tu publicación…"
-    },
-    "formats": {
-      "bold": "Negrita",
-      "italic": "Cursiva",
-      "underline": "Subrayado",
-      "strikethrough": "Tachado",
-      "highlight": "Resaltado"
-    }
+    "saveDraft": "Guardar borrador",
+    "saving": "Guardando…",
+    "placeholderFirst": "¿Sobre qué quieres escribir?",
+    "placeholderNext": "Continúa en un nuevo segmento…",
+    "segment": "Segmento {n}",
+    "addSegment": "Añadir segmento",
+    "removeSegment": "Eliminar segmento",
+    "moveUp": "Subir",
+    "moveDown": "Bajar",
+    "drafts": "Borradores",
+    "newPost": "Nueva publicación",
+    "emptyDraft": "Borrador vacío",
+    "savedDraft": "Borrador guardado",
+    "published": "Publicado",
+    "saveFailed": "No se pudo guardar. Inténtalo de nuevo.",
+    "tooLong": "Supera el límite de {max, number} caracteres",
+    "emptySegments": "Rellena o elimina los segmentos vacíos para publicar",
+    "channels": "Canales",
+    "connectChannel": "Conectar {channel}",
+    "reconnectChannel": "Reconectar {channel}",
+    "needsReconnect": "Reconectar",
+    "toggleChannel": "Publicar en {channel} como {account}",
+    "connectFailed": "No se pudo iniciar la conexión. Inténtalo de nuevo.",
+    "channelConnected": "Cuenta de {channel} conectada",
+    "channelConnectDenied": "Se canceló la conexión con {channel}",
+    "channelTaken": "Esta cuenta de {channel} ya está conectada",
+    "channelConnectFailed": "No se pudo conectar la cuenta de {channel}. Inténtalo de nuevo."
   },
   "brandStack": {
     "publishedTo": "Publicado en {brands}"

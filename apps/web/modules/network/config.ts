@@ -97,6 +97,8 @@ export const http = {
     request<T>('GET', path, undefined, config),
   post: <T>(path: string, data?: unknown, config?: RequestConfig) =>
     request<T>('POST', path, data, config),
+  put: <T>(path: string, data?: unknown, config?: RequestConfig) =>
+    request<T>('PUT', path, data, config),
   patch: <T>(path: string, data?: unknown, config?: RequestConfig) =>
     request<T>('PATCH', path, data, config),
   delete: <T>(path: string, config?: RequestConfig) =>

@@ -43,28 +43,33 @@
     "title": "새 글",
     "cancel": "취소",
     "publish": "발행",
-    "prompt": "어떤 이야기를 써볼까요?",
-    "tools": {
-      "photo": "사진",
-      "emoji": "이모지",
-      "sticker": "스티커",
-      "poll": "투표",
-      "text": "텍스트 첨부",
-      "location": "위치",
-      "music": "음악"
-    },
-    "textView": {
-      "title": "텍스트 첨부",
-      "done": "완료",
-      "placeholder": "내용을 더 추가해보세요…"
-    },
-    "formats": {
-      "bold": "굵게",
-      "italic": "기울임",
-      "underline": "밑줄",
-      "strikethrough": "취소선",
-      "highlight": "강조"
-    }
+    "saveDraft": "초안 저장",
+    "saving": "저장 중…",
+    "placeholderFirst": "어떤 이야기를 써볼까요?",
+    "placeholderNext": "새 조각에 이어서 써보세요…",
+    "segment": "조각 {n}",
+    "addSegment": "조각 추가",
+    "removeSegment": "조각 삭제",
+    "moveUp": "위로 이동",
+    "moveDown": "아래로 이동",
+    "drafts": "초안",
+    "newPost": "새 글",
+    "emptyDraft": "빈 초안",
+    "savedDraft": "초안을 저장했습니다",
+    "published": "발행했습니다",
+    "saveFailed": "저장하지 못했습니다. 다시 시도해 주세요.",
+    "tooLong": "{max, number}자 상한을 넘었습니다",
+    "emptySegments": "빈 조각을 채우거나 지워야 발행할 수 있습니다",
+    "channels": "채널",
+    "connectChannel": "{channel} 연결",
+    "reconnectChannel": "{channel} 다시 연결",
+    "needsReconnect": "다시 연결",
+    "toggleChannel": "{account}으로 {channel}에 게시",
+    "connectFailed": "연결을 시작하지 못했습니다. 다시 시도해 주세요.",
+    "channelConnected": "{channel} 계정을 연결했습니다",
+    "channelConnectDenied": "{channel} 연결을 취소했습니다",
+    "channelTaken": "이 {channel} 계정은 이미 연결되어 있습니다",
+    "channelConnectFailed": "{channel} 계정을 연결하지 못했습니다. 다시 시도해 주세요."
   },
   "brandStack": {
     "publishedTo": "{brands}에 게시됨"
