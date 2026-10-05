@@ -6,8 +6,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "incremental": true,
-    "module": "commonjs",
-    "moduleResolution": "Node10",
     "removeComments": true,
     "sourceMap": true
   }
