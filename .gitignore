@@ -56,3 +56,8 @@ pnpm-debug.log*
 # Misc
 .DS_Store
 *.pem
+
+# Local working notes. Removed once the channel integration work is done.
+/MIGRATION.md
+/image.png
+/임시이미지.png
