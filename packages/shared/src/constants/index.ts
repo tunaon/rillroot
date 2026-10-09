@@ -30,19 +30,47 @@ export const LANGUAGE_PATTERN = /^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/;
 export const INTERNAL_PATH_PATTERN = /^\/(?![/\\])/;
 
 /**
+ * 서버 호스트 이름의 형식. 소문자 라벨을 점으로 이은 이름만 받고, 점이 하나는 있어야 하며, 끝 라벨은 글자로 시작한다.
+ * 서버마다 계정이 나뉘는 채널의 서버 주소를 받을 때 API 와 웹, DB 제약이 같은 규칙으로 검사한다.
+ * API 가 이 주소로 요청을 보내므로 점 없는 내부 이름과 숫자로 끝나는 IP 주소는 여기서 걸러진다.
+ */
+export const HOSTNAME_PATTERN =
+  /^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]([a-z0-9-]{0,61}[a-z0-9])?$/;
+
+/**
  * 배포 채널 선언. 연동이 구현된 채널만 available 이다.
+ * needsServer 는 서버마다 계정이 나뉘어 연동을 시작할 때 서버 주소를 받아야 하는 채널이다.
  * 한도·본문 형식·요구 사항 같은 배포 능력은 배포 단계에서 이 선언에 붙는다.
  */
 export const CHANNELS = [
-  { key: 'bluesky', name: 'Bluesky', available: true },
-  { key: 'mastodon', name: 'Mastodon', available: false },
-  { key: 'linkedin', name: 'LinkedIn', available: false },
-  { key: 'wordpress', name: 'WordPress', available: false },
+  { key: 'bluesky', name: 'Bluesky', available: true, needsServer: false },
+  { key: 'mastodon', name: 'Mastodon', available: true, needsServer: true },
+  { key: 'linkedin', name: 'LinkedIn', available: false, needsServer: false },
+  {
+    key: 'wordpress',
+    name: 'WordPress',
+    available: false,
+    needsServer: false,
+  },
 ] as const satisfies readonly {
   key: Channel;
   name: string;
   available: boolean;
+  needsServer: boolean;
 }[];
+
+/**
+ * API 가 창작자에게 보일 실패에 붙이는 코드. 문구는 웹의 i18n 이 갖고 API 는 코드만 낸다.
+ * 코드가 없는 실패는 웹이 일반 문구로 보인다.
+ */
+export const API_ERROR_CODES = [
+  'server_required',
+  'server_unreachable',
+  'channel_unavailable',
+  'post_already_published',
+] as const;
+
+export type ApiErrorCode = (typeof API_ERROR_CODES)[number];
 
 /**
  * 채널이 복귀 주소에 붙여 보내는 OAuth 응답 값. 모든 OAuth 채널에 공통이다.

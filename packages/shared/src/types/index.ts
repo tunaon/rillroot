@@ -1,4 +1,17 @@
+import type { ApiErrorCode } from '../constants';
+
 export type Theme = 'system' | 'light' | 'dark';
+
+/**
+ * API 가 창작자에게 보일 실패에 싣는 본문. 웹은 code 로 문구를 고르고, message 는 로그와 개발용이다.
+ *
+ * @property {ApiErrorCode} code 실패의 종류
+ * @property {string} message 개발자가 읽는 영문 설명
+ */
+export interface ApiErrorBody {
+  code: ApiErrorCode;
+  message: string;
+}
 
 /**
  * API가 응답에 담는 사용자 프로필. 접속 기록(국가·로그인 수단)은 통계용이라 담지 않는다.
@@ -81,9 +94,11 @@ export interface Connection {
  *
  * @property {string} [return_to] 연동이 끝난 뒤 돌아갈 내부 경로. API 가 인가 상태에 함께 보관했다가
  *   완료할 때 돌려준다. 실패해도 돌려준다.
+ * @property {string} [server] 계정이 있는 서버의 호스트 이름. 채널 선언이 needsServer 인 채널만 받는다.
  */
 export interface AuthorizeConnectionRequest {
   return_to?: string;
+  server?: string;
 }
 
 /** 연동 시작 응답. 같은 탭을 이 주소로 보낸다. */
