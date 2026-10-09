@@ -37,6 +37,12 @@ export const BRANDS = {
     Icon: Icons.brand.bluesky,
     fill: 'var(--bluesky)',
   },
+  mastodon: {
+    key: 'mastodon',
+    label: 'Mastodon',
+    Icon: Icons.brand.mastodon,
+    fill: 'var(--mastodon)',
+  },
 } as const satisfies Record<string, Brand>;
 
 /**

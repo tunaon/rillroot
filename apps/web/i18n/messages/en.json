@@ -61,7 +61,6 @@
     "tooLong": "Over the {max, number} character limit",
     "emptySegments": "Fill or remove the empty segments to publish",
     "channels": "Channels",
-    "connectChannel": "Connect {channel}",
     "reconnectChannel": "Reconnect {channel}",
     "needsReconnect": "Reconnect",
     "toggleChannel": "Post to {channel} as {account}",
@@ -69,7 +68,19 @@
     "channelConnected": "{channel} account connected",
     "channelConnectDenied": "{channel} connection was cancelled",
     "channelTaken": "This {channel} account is already connected",
-    "channelConnectFailed": "Couldn't connect your {channel} account. Please try again."
+    "channelConnectFailed": "Couldn't connect your {channel} account. Please try again.",
+    "addChannel": "Add channel",
+    "chooseServer": "Choose your {channel} server",
+    "serverHint": "{channel} is made of many independent servers. Choose the one your account is on to sign in there.",
+    "otherServer": "Other server",
+    "serverInvalid": "Enter only the server's domain name.",
+    "continue": "Continue"
+  },
+  "apiErrors": {
+    "server_required": "Choose a server first.",
+    "server_unreachable": "Couldn't reach that server. Check the address and try again.",
+    "channel_unavailable": "This channel isn't available yet.",
+    "post_already_published": "This post is already published."
   },
   "brandStack": {
     "publishedTo": "Published to {brands}"

@@ -61,7 +61,6 @@
     "tooLong": "Supera el límite de {max, number} caracteres",
     "emptySegments": "Rellena o elimina los segmentos vacíos para publicar",
     "channels": "Canales",
-    "connectChannel": "Conectar {channel}",
     "reconnectChannel": "Reconectar {channel}",
     "needsReconnect": "Reconectar",
     "toggleChannel": "Publicar en {channel} como {account}",
@@ -69,7 +68,19 @@
     "channelConnected": "Cuenta de {channel} conectada",
     "channelConnectDenied": "Se canceló la conexión con {channel}",
     "channelTaken": "Esta cuenta de {channel} ya está conectada",
-    "channelConnectFailed": "No se pudo conectar la cuenta de {channel}. Inténtalo de nuevo."
+    "channelConnectFailed": "No se pudo conectar la cuenta de {channel}. Inténtalo de nuevo.",
+    "addChannel": "Añadir canal",
+    "chooseServer": "Elige tu servidor de {channel}",
+    "serverHint": "{channel} está formado por muchos servidores independientes. Elige aquel donde está tu cuenta para iniciar sesión allí.",
+    "otherServer": "Otro servidor",
+    "serverInvalid": "Introduce solo el nombre de dominio del servidor.",
+    "continue": "Continuar"
+  },
+  "apiErrors": {
+    "server_required": "Elige primero un servidor.",
+    "server_unreachable": "No se pudo conectar con ese servidor. Comprueba la dirección e inténtalo de nuevo.",
+    "channel_unavailable": "Este canal aún no está disponible.",
+    "post_already_published": "Esta publicación ya está publicada."
   },
   "brandStack": {
     "publishedTo": "Publicado en {brands}"

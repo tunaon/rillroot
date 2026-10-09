@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { cn } from "cn"
-import { CircleIcon } from "lucide-react"
-import { RadioGroup as RadioGroupPrimitive } from "radix-ui"
+import { cn } from 'cn';
+import { CircleIcon } from 'lucide-react';
+import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
+import * as React from 'react';
 
 function RadioGroup({
   className,
@@ -12,10 +12,10 @@ function RadioGroup({
   return (
     <RadioGroupPrimitive.Root
       data-slot="radio-group"
-      className={cn("grid gap-3", className)}
+      className={cn('grid gap-3', className)}
       {...props}
     />
-  )
+  );
 }
 
 // children 을 주면 점 표시 대신 그것을 그린다. 세그먼트처럼 선택 상태를 항목 스타일로
@@ -29,7 +29,7 @@ function RadioGroupItem({
     <RadioGroupPrimitive.Item
       data-slot="radio-group-item"
       className={cn(
-        "aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40",
+        'aspect-square size-4 shrink-0 rounded-full border border-input shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40',
         className
       )}
       {...props}
@@ -43,7 +43,7 @@ function RadioGroupItem({
         </RadioGroupPrimitive.Indicator>
       )}
     </RadioGroupPrimitive.Item>
-  )
+  );
 }
 
-export { RadioGroup, RadioGroupItem }
+export { RadioGroup, RadioGroupItem };

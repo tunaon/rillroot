@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
+import { type ApiErrorCode, isApiErrorCode } from '@rillroot/shared';
 
 /**
  * API 호출 설정.
@@ -16,7 +17,10 @@ export type RequestConfig = Omit<RequestInit, 'method' | 'body' | 'headers'> & {
   country?: string | null;
 };
 
-/** API가 2xx 이외로 답한 요청. 호출부는 status로 분기한다. */
+/**
+ * API가 2xx 이외로 답한 요청. 호출부는 status로 분기하고, 창작자에게 보일 문구는 code로 고른다.
+ * message는 API의 영문 설명이라 화면에 내지 않는다.
+ */
 export class ApiError extends Error {
   constructor(
     readonly status: number,
@@ -25,6 +29,18 @@ export class ApiError extends Error {
   ) {
     super(message);
     this.name = 'ApiError';
+  }
+
+  /** API가 본문에 붙인 실패 코드. 없거나 모르는 코드면 null */
+  get code(): ApiErrorCode | null {
+    const { body } = this;
+    return typeof body === 'object' &&
+      body !== null &&
+      'code' in body &&
+      typeof body.code === 'string' &&
+      isApiErrorCode(body.code)
+      ? body.code
+      : null;
   }
 }
 

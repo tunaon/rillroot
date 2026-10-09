@@ -200,6 +200,7 @@
   --threads: var(--foreground);
   --bluesky: #1185fe;
   --linkedin: #0a66c2;
+  --mastodon: #563acc;
 }
 
 .dark {
@@ -245,6 +246,9 @@
   --glass-rim: oklch(0.97 0.004 271.4 / 0.14);
   --glass-rim-low: oklch(0 0 0 / 0.45);
   --glass-shadow: oklch(0 0 0 / 0.5);
+
+  /* Mastodon 은 밝은 테마용과 어두운 테마용 로고 색을 따로 정해 두었다. */
+  --mastodon: #6364ff;
 }
 
 @layer base {

@@ -61,7 +61,6 @@
     "tooLong": "{max, number}자 상한을 넘었습니다",
     "emptySegments": "빈 조각을 채우거나 지워야 발행할 수 있습니다",
     "channels": "채널",
-    "connectChannel": "{channel} 연결",
     "reconnectChannel": "{channel} 다시 연결",
     "needsReconnect": "다시 연결",
     "toggleChannel": "{account}으로 {channel}에 게시",
@@ -69,7 +68,19 @@
     "channelConnected": "{channel} 계정을 연결했습니다",
     "channelConnectDenied": "{channel} 연결을 취소했습니다",
     "channelTaken": "이 {channel} 계정은 이미 연결되어 있습니다",
-    "channelConnectFailed": "{channel} 계정을 연결하지 못했습니다. 다시 시도해 주세요."
+    "channelConnectFailed": "{channel} 계정을 연결하지 못했습니다. 다시 시도해 주세요.",
+    "addChannel": "채널 추가",
+    "chooseServer": "{channel} 서버 선택",
+    "serverHint": "{channel}은 독립된 서버 여러 개로 이루어져 있습니다. 계정을 만든 서버를 고르면 그 서버의 로그인 화면으로 이동합니다.",
+    "otherServer": "다른 서버",
+    "serverInvalid": "서버의 도메인 이름만 입력해 주세요.",
+    "continue": "계속"
+  },
+  "apiErrors": {
+    "server_required": "서버를 먼저 골라 주세요.",
+    "server_unreachable": "그 서버에 연결할 수 없습니다. 주소를 확인하고 다시 시도해 주세요.",
+    "channel_unavailable": "아직 열리지 않은 채널입니다.",
+    "post_already_published": "이미 발행된 글입니다."
   },
   "brandStack": {
     "publishedTo": "{brands}에 게시됨"

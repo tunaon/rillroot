@@ -61,7 +61,6 @@
     "tooLong": "上限の{max, number}文字を超えています",
     "emptySegments": "公開するには空のセグメントを埋めるか削除してください",
     "channels": "チャンネル",
-    "connectChannel": "{channel}を連携",
     "reconnectChannel": "{channel}を再連携",
     "needsReconnect": "再連携",
     "toggleChannel": "{account}として{channel}に投稿",
@@ -69,7 +68,19 @@
     "channelConnected": "{channel}アカウントを連携しました",
     "channelConnectDenied": "{channel}の連携をキャンセルしました",
     "channelTaken": "この{channel}アカウントはすでに連携されています",
-    "channelConnectFailed": "{channel}アカウントを連携できませんでした。もう一度お試しください。"
+    "channelConnectFailed": "{channel}アカウントを連携できませんでした。もう一度お試しください。",
+    "addChannel": "チャンネルを追加",
+    "chooseServer": "{channel}サーバーを選択",
+    "serverHint": "{channel}は独立した複数のサーバーで構成されています。アカウントのあるサーバーを選ぶと、そのサーバーのログイン画面に移動します。",
+    "otherServer": "その他のサーバー",
+    "serverInvalid": "サーバーのドメイン名のみを入力してください。",
+    "continue": "続行"
+  },
+  "apiErrors": {
+    "server_required": "先にサーバーを選んでください。",
+    "server_unreachable": "そのサーバーに接続できません。アドレスを確認してもう一度お試しください。",
+    "channel_unavailable": "このチャンネルはまだ利用できません。",
+    "post_already_published": "この投稿はすでに公開されています。"
   },
   "brandStack": {
     "publishedTo": "{brands}に投稿済み"
