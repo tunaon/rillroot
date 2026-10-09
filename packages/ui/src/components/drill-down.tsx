@@ -24,6 +24,7 @@ import {
   useState,
 } from 'react';
 
+import { useFill } from '../lib/fill-context';
 import { cn } from '../lib/utils';
 
 // globals.css 의 --ease-out-expo 와 같은 곡선. 프로젝트의 나머지 모션이 CSS keyframes 로
@@ -91,6 +92,7 @@ function Frame({
   maxHeight,
   autoFocus,
   dialogTitle,
+  fill,
   onMeasure,
 }: {
   view: DrillDownViewProps;
@@ -98,6 +100,7 @@ function Frame({
   maxHeight: string;
   autoFocus: boolean;
   dialogTitle: boolean;
+  fill: boolean;
   onMeasure(height: number): void;
 }) {
   // 빠져나가는 동안 AnimatePresence 가 이 프레임을 계속 마운트해 둔다.
@@ -110,8 +113,9 @@ function Frame({
 
   // 페인트 전에 재야 한다. 뷰가 바뀌는 커밋에서 컨테이너는 아직 이전 높이를 붙들고
   // 있고, 새 프레임은 그 안에서 잘린 채다. 여기서 실제 높이를 넘겨 전환을 시작한다.
+  // fill 이면 높이를 컨테이너가 정하므로 재지 않는다.
   useIsomorphicLayoutEffect(() => {
-    if (!isPresent) return;
+    if (!isPresent || fill) return;
     const el = ref.current;
     if (!el) return;
 
@@ -121,7 +125,7 @@ function Frame({
     const observer = new ResizeObserver(report);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [isPresent, onMeasure]);
+  }, [isPresent, fill, onMeasure]);
 
   // inert 가 붙는 순간 브라우저가 blur 시키며 relatedTarget === null 인 focusout 을
   // 내는데, Radix FocusScope 는 정확히 그 조건에서 early return 한다. 직접 옮기지
@@ -134,19 +138,22 @@ function Frame({
   const body =
     typeof view.children === 'function' ? view.children(nav) : view.children;
 
+  // 머리는 고정하고 본문만 스크롤한다. 바닥까지 고정하려는 뷰는 본문 안에서
+  // "스크롤 영역 + 바닥"으로 열을 나눈다. 본문 래퍼가 flex 열이라 그 열이 남은 높이를 채운다.
   return (
     <div
       ref={ref}
       tabIndex={-1}
       inert={!isPresent}
-      style={{ maxHeight }}
+      style={fill ? undefined : { maxHeight }}
       className={cn(
-        'w-full overflow-y-auto overscroll-contain outline-none',
+        'flex w-full flex-col outline-none',
+        fill && 'h-full',
         view.className
       )}
     >
       {(view.title || view.leading || view.trailing) && (
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-b px-4 py-3">
+        <div className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-2 border-b px-4 py-3">
           <span className="justify-self-start">{view.leading}</span>
           <Heading className="truncate text-sm font-semibold">
             {view.title}
@@ -154,7 +161,9 @@ function Frame({
           <span className="justify-self-end">{view.trailing}</span>
         </div>
       )}
-      {body}
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
+        {body}
+      </div>
     </div>
   );
 }
@@ -170,19 +179,27 @@ export function DrillDown({
   className,
   maxHeight = '70dvh',
   dialogTitle = true,
+  fill: fillProp,
   ref,
 }: {
   children: React.ReactNode;
   className?: string;
-  /** 프레임 높이 상한. Drawer 의 max-h-[80vh] 보다 낮아야 시트 밖으로 안 넘친다. */
+  /** 프레임 높이 상한. Drawer 의 max-h-[80vh] 보다 낮아야 시트 밖으로 안 넘친다. 채울 때는 쓰지 않는다. */
   maxHeight?: string;
   /**
    * 뷰 제목을 Dialog 의 접근성 제목으로 그린다. Radix Title 은 Dialog 밖에서 예외를
    * 던지므로 드롭다운 같은 곳에 둘 때는 끈다.
    */
   dialogTitle?: boolean;
+  /**
+   * 컨테이너 높이를 채운다. 높이를 컨테이너가 정하므로 뷰가 바뀌어도 높이 애니메이션은 없고
+   * 좌우 전환만 한다. 주지 않으면 감싼 모달이 알려 주는 값(FillContext)을 따르므로 보통은 쓸 일이 없다.
+   */
+  fill?: boolean;
   ref?: React.Ref<DrillDownHandle>;
 }) {
+  const fillFromContext = useFill();
+  const fill = fillProp ?? fillFromContext;
   const views = useMemo(() => {
     const collected = new Map<string, DrillDownViewProps>();
     for (const child of Children.toArray(children)) {
@@ -264,8 +281,12 @@ export function DrillDown({
         // overflow-hidden 은 여전히 스크롤 컨테이너라, 프레임 안에서 focus() 한 번이면
         // 브라우저가 scrollLeft 를 밀어 화면이 영구히 어긋나고 vaul 의 드래그-투-디스미스도
         // 죽는다. overflow-clip 은 스크롤 컨테이너가 아니라 그 일이 불가능하다.
-        className={cn('relative overflow-clip', className)}
-        style={{ height }}
+        className={cn(
+          'relative overflow-clip',
+          fill && 'flex min-h-0 flex-1 flex-col',
+          className
+        )}
+        style={fill ? undefined : { height }}
       >
         {/* popLayout 이 나가는 프레임을 position:absolute 로 흐름에서 빼준다.
             덕분에 들어오는 프레임만 높이를 결정한다. */}
@@ -282,6 +303,7 @@ export function DrillDown({
             animate="center"
             exit="exit"
             transition={transition}
+            className={cn(fill && 'min-h-0 flex-1')}
           >
             <Frame
               view={active}
@@ -289,6 +311,7 @@ export function DrillDown({
               maxHeight={maxHeight}
               autoFocus={navigated.current}
               dialogTitle={dialogTitle}
+              fill={fill}
               onMeasure={onMeasure}
             />
           </motion.div>

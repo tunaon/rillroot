@@ -3,6 +3,7 @@
 import { Slot } from 'radix-ui';
 import { useId, useRef, useState } from 'react';
 import useMediaQuery from '../hooks/useMediaQuery';
+import { FillContext } from '../lib/fill-context';
 import { cn } from '../lib/utils';
 import {
   Dialog,
@@ -133,8 +134,9 @@ export default function ResponsiveDialog({
         {/* 시트 자체는 화면 끝까지 깔되 안쪽만 720px 로 묶는다. Drawer 는 1024px
             미만 전 구간을 담당해서, 태블릿 폭에서는 전체 너비로 늘어지면 읽기 어렵다.
             flex 열과 min-h-0 은 DrawerContent 의 최대 높이를 children 까지 잇는다.
-            끊기면 children 이 자기 내용만큼 자라 잘리고, 안쪽 스크롤이 생기지 않는다. */}
-        <div className="mx-auto flex min-h-0 w-full max-w-180 flex-col">
+            끊기면 children 이 자기 내용만큼 자라 잘리고, 안쪽 스크롤이 생기지 않는다.
+            flex-1 은 시트가 h-full 일 때 래퍼가 그 높이를 채우게 한다. 내용 높이 시트에서는 효과가 없다. */}
+        <div className="mx-auto flex min-h-0 w-full max-w-180 flex-1 flex-col">
           {hasHeader && (
             <DrawerHeader>
               {title && <DrawerTitle>{title}</DrawerTitle>}
@@ -161,8 +163,12 @@ export default function ResponsiveDialog({
   // 하이드레이션 직후 데스크톱에서 Dialog 와 Drawer 가 한 번 통째로 교체되는데, 그 안에 두면
   // 버튼 DOM 이 새로 생겨 등장 애니메이션이 처음부터 다시 돌고 포커스도 끊긴다.
   // 그래서 Radix 의 DialogTrigger 대신 여는 동작과 aria 를 직접 합친다.
+  // 시트가 화면 높이로 열릴 때만 안쪽이 그 높이를 채운다. 내용 높이 시트와 Dialog 는 내용 높이다.
+  // 안쪽 레이아웃이 Drawer 인지 직접 재지 않도록 여기서 알려 준다.
+  const fill = !isDesktop && size === 'max-drawer';
+
   return (
-    <>
+    <FillContext.Provider value={fill}>
       {trigger && (
         <Slot.Root
           ref={triggerRef}
@@ -175,6 +181,6 @@ export default function ResponsiveDialog({
         </Slot.Root>
       )}
       {modal}
-    </>
+    </FillContext.Provider>
   );
 }
