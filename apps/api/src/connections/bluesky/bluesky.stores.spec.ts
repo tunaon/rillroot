@@ -13,6 +13,7 @@ import type {
 } from '@atproto/oauth-client-node';
 import { queryReturning } from '../../../test/supabase-query';
 import { SupabaseService } from '../../supabase/supabase.service';
+import { ConnectionAttempts } from '../attempts';
 import { ConnectionContext } from '../connection-context';
 import { BlueskyStores } from './bluesky.stores';
 
@@ -55,6 +56,7 @@ describe('BlueskyStores', () => {
     const module = await Test.createTestingModule({
       providers: [
         BlueskyStores,
+        ConnectionAttempts,
         ConnectionContext,
         {
           provide: SupabaseService,

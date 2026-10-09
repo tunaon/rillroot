@@ -7,11 +7,9 @@ import type {
   NodeSavedStateStore,
 } from '@atproto/oauth-client-node';
 import { SupabaseService } from '../../supabase/supabase.service';
+import { ConnectionAttempts } from '../attempts';
 import { ConnectionContext } from '../connection-context';
 import { BLUESKY_CHANNEL } from './bluesky.constants';
-
-/** 진행 중 시도의 수명. 라이브러리 권장값이다. */
-const ATTEMPT_TTL_MS = 60 * 60 * 1000;
 
 /** 핸들을 읽을 공개 AppView. 인증도 추가 권한도 필요 없다. */
 const PUBLIC_API = 'https://public.api.bsky.app';
@@ -21,7 +19,7 @@ const PROFILE_TIMEOUT_MS = 3000;
  * Bluesky OAuth 라이브러리가 요구하는 저장소 두 개를 우리 테이블과 Vault 함수 위에 만든다.
  *
  * - stateStore: 인가 요청마다 하나. state 를 열쇠로 PKCE verifier 와 임시 DPoP 키를 둔다.
- *   `connection_attempts` 에 저장하고 한 시간 뒤 버린다.
+ *   채널 공통의 진행 중 시도(ConnectionAttempts)에 그대로 맡긴다.
  * - sessionStore: 계정(DID)마다 하나. 접근·갱신 토큰과 DPoP 키를 둔다.
  *   `social_connections` 행 하나에 Vault 비밀 하나로 저장한다.
  *
@@ -34,6 +32,7 @@ export class BlueskyStores {
 
   constructor(
     private readonly supabaseService: SupabaseService,
+    private readonly attempts: ConnectionAttempts,
     private readonly context: ConnectionContext
   ) {}
 
@@ -50,7 +49,7 @@ export class BlueskyStores {
   };
 
   /**
-   * 인가 요청의 진행 중 상태를 남긴다. 만료된 다른 시도는 이때 함께 지운다.
+   * 인가 요청의 진행 중 상태를 남긴다.
    *
    * @param state 인가 요청의 state
    * @param data 복귀 때 필요한 값
@@ -62,64 +61,20 @@ export class BlueskyStores {
       throw new Error('connection context is required to start authorization');
     }
 
-    const client = this.supabaseService.getClient();
-    const now = new Date();
-
-    const { error: cleanupError } = await client
-      .from('connection_attempts')
-      .delete()
-      .lt('expires_at', now.toISOString());
-
-    if (cleanupError) {
-      this.logger.warn(`attempt cleanup failed: ${cleanupError.message}`);
-    }
-
-    const { error } = await client.from('connection_attempts').insert({
+    await this.attempts.create(
       state,
-      profile_id: scope.profileId,
-      channel: BLUESKY_CHANNEL,
-      payload: data as unknown as Json,
-      expires_at: new Date(now.getTime() + ATTEMPT_TTL_MS).toISOString(),
-    });
-
-    if (error) {
-      throw new Error(error.message);
-    }
+      scope.profileId,
+      BLUESKY_CHANNEL,
+      data as unknown as Json
+    );
   }
 
-  /**
-   * 만료되지 않은 진행 중 상태를 읽는다.
-   *
-   * @param state 인가 요청의 state
-   * @returns 저장한 값. 없거나 만료되었으면 undefined
-   */
-  private async getState(state: string): Promise<NodeSavedState | undefined> {
-    const { data, error } = await this.supabaseService
-      .getClient()
-      .from('connection_attempts')
-      .select('payload')
-      .eq('state', state)
-      .eq('channel', BLUESKY_CHANNEL)
-      .gt('expires_at', new Date().toISOString())
-      .maybeSingle();
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return (data as { payload: NodeSavedState } | null)?.payload;
+  private getState(state: string): Promise<NodeSavedState | undefined> {
+    return this.attempts.read<NodeSavedState>(state, BLUESKY_CHANNEL);
   }
 
-  private async delState(state: string): Promise<void> {
-    const { error } = await this.supabaseService
-      .getClient()
-      .from('connection_attempts')
-      .delete()
-      .eq('state', state);
-
-    if (error) {
-      throw new Error(error.message);
-    }
+  private delState(state: string): Promise<void> {
+    return this.attempts.delete(state);
   }
 
   /**

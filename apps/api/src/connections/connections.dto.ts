@@ -1,8 +1,10 @@
 import {
   type AuthorizeConnectionRequest,
   type CompleteConnectionRequest,
+  HOSTNAME_PATTERN,
   INTERNAL_PATH_PATTERN,
 } from '@rillroot/shared';
+import { Transform } from 'class-transformer';
 import {
   IsNotEmpty,
   IsOptional,
@@ -16,6 +18,8 @@ import {
  *
  * @property {string} [return_to] 연동이 끝난 뒤 돌아갈 내부 경로. 인가 상태에 함께 보관했다가
  *   완료할 때 돌려준다. 웹 복귀 라우트와 같은 규칙(INTERNAL_PATH_PATTERN)으로 내부 경로만 받는다.
+ * @property {string} [server] 계정이 있는 서버의 호스트 이름. 채널 선언이 needsServer 인 채널의 커넥터가
+ *   요구한다. 웹과 같은 규칙(HOSTNAME_PATTERN)으로 소문자 호스트 이름만 받고, 앞뒤 공백과 대문자는 고쳐 받는다.
  */
 export class AuthorizeConnectionDto implements AuthorizeConnectionRequest {
   @IsOptional()
@@ -23,6 +27,15 @@ export class AuthorizeConnectionDto implements AuthorizeConnectionRequest {
   @MaxLength(2048)
   @Matches(INTERNAL_PATH_PATTERN)
   return_to?: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toLowerCase() : value
+  )
+  @MaxLength(253)
+  @Matches(HOSTNAME_PATTERN)
+  server?: string;
 }
 
 /**

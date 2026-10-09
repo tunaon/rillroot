@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import type {
+  ApiErrorBody,
   CreatePostRequest,
   Post,
   UpdatePostRequest,
@@ -111,7 +112,10 @@ export class PostsService {
 
     // 확인과 저장 사이에 발행된 경우다. 함수가 초안만 고치므로 여기서 걸린다.
     if (data !== true) {
-      throw new ConflictException('post is already published');
+      throw new ConflictException({
+        code: 'post_already_published',
+        message: 'post is already published',
+      } satisfies ApiErrorBody);
     }
 
     return this.findOne(postId);
@@ -172,7 +176,10 @@ export class PostsService {
     }
 
     if (row.published_at !== null) {
-      throw new ConflictException('post is already published');
+      throw new ConflictException({
+        code: 'post_already_published',
+        message: 'post is already published',
+      } satisfies ApiErrorBody);
     }
   }
 

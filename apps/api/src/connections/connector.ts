@@ -1,4 +1,8 @@
-import type { Channel, CompleteConnectionRequest } from '@rillroot/shared';
+import type {
+  AuthorizeConnectionRequest,
+  Channel,
+  CompleteConnectionRequest,
+} from '@rillroot/shared';
 
 /**
  * 연동 완료 결과.
@@ -45,10 +49,13 @@ export interface ChannelConnector {
    * 채널의 인가 주소를 만든다. 진행 중 상태(state)와 돌아갈 경로는 이 안에서 저장소에 남는다.
    *
    * @param profileId 연동을 시작하는 사용자 id
-   * @param returnTo 연동이 끝난 뒤 돌아갈 내부 경로. 없으면 null
+   * @param request 돌아갈 내부 경로와 채널 선언이 요구하는 입력(서버 주소)
    * @returns 같은 탭을 보낼 인가 주소
    */
-  authorize(profileId: string, returnTo: string | null): Promise<URL>;
+  authorize(
+    profileId: string,
+    request: AuthorizeConnectionRequest
+  ): Promise<URL>;
 
   /**
    * 채널이 복귀 주소에 붙여 보낸 값으로 토큰을 교환하고 저장소를 통해 연동 행을 만든다.

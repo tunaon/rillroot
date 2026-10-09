@@ -10,6 +10,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  type ApiErrorBody,
   type AuthorizeConnectionRequest,
   type AuthorizeConnectionResponse,
   type CompleteConnectionRequest,
@@ -87,7 +88,7 @@ export class ConnectionsService {
    *
    * @param profileId 사용자 id
    * @param channel 연동할 채널 키
-   * @param request 연동이 끝난 뒤 돌아갈 경로를 담은 요청
+   * @param request 돌아갈 경로와 채널이 요구하는 입력을 담은 요청
    * @returns 같은 탭을 보낼 주소
    * @throws {NotFoundException} 연동이 구현되지 않은 채널인 경우
    */
@@ -96,10 +97,7 @@ export class ConnectionsService {
     channel: string,
     request: AuthorizeConnectionRequest
   ): Promise<AuthorizeConnectionResponse> {
-    const url = await this.connectorFor(channel).authorize(
-      profileId,
-      request.return_to ?? null
-    );
+    const url = await this.connectorFor(channel).authorize(profileId, request);
     return { url: url.href };
   }
 
@@ -221,7 +219,10 @@ export class ConnectionsService {
       : undefined;
 
     if (!connector) {
-      throw new NotFoundException(`channel ${channel} is not available`);
+      throw new NotFoundException({
+        code: 'channel_unavailable',
+        message: `channel ${channel} is not available`,
+      } satisfies ApiErrorBody);
     }
 
     return connector;

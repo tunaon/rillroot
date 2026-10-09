@@ -95,17 +95,19 @@ describe('ConnectionsService', () => {
       await expect(
         service.authorize(PROFILE, 'bluesky', { return_to: RETURN_TO })
       ).resolves.toEqual({ url: 'https://bsky.social/oauth/authorize?x=1' });
-      expect(connector.authorize).toHaveBeenCalledWith(PROFILE, RETURN_TO);
+      expect(connector.authorize).toHaveBeenCalledWith(PROFILE, {
+        return_to: RETURN_TO,
+      });
     });
 
-    it('돌아갈 경로가 없으면 null 로 넘긴다', async () => {
+    it('돌아갈 경로가 없어도 요청을 그대로 넘긴다', async () => {
       connector.authorize.mockResolvedValue(
         new URL('https://bsky.social/oauth/authorize')
       );
 
       await service.authorize(PROFILE, 'bluesky', {});
 
-      expect(connector.authorize).toHaveBeenCalledWith(PROFILE, null);
+      expect(connector.authorize).toHaveBeenCalledWith(PROFILE, {});
     });
 
     it('선언되지 않았거나 아직 열리지 않은 채널은 404', async () => {

@@ -39,6 +39,28 @@ describe('AuthorizeConnectionDto', () => {
       expect(await failingAuthorize({ return_to })).toEqual(['return_to']);
     }
   });
+
+  it('서버 주소는 앞뒤 공백과 대문자를 고쳐 받는다', async () => {
+    const dto = plainToInstance(AuthorizeConnectionDto, {
+      server: ' Mastodon.Social ',
+    });
+
+    expect(dto.server).toBe('mastodon.social');
+    expect(await validate(dto)).toEqual([]);
+  });
+
+  it('호스트 이름이 아닌 서버 주소는 거부한다', async () => {
+    for (const server of [
+      'https://mastodon.social',
+      'mastodon.social/@me',
+      'mastodon.social:443',
+      '127.0.0.1',
+      'localhost',
+      '',
+    ]) {
+      expect(await failingAuthorize({ server })).toEqual(['server']);
+    }
+  });
 });
 
 describe('CompleteConnectionDto', () => {

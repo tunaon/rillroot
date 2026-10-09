@@ -1,6 +1,9 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { CompleteConnectionRequest } from '@rillroot/shared';
+import type {
+  AuthorizeConnectionRequest,
+  CompleteConnectionRequest,
+} from '@rillroot/shared';
 import {
   JoseKey,
   NodeOAuthClient,
@@ -93,11 +96,14 @@ export class BlueskyConnector implements ChannelConnector, OnModuleInit {
    * 돌아갈 경로는 라이브러리의 state 옵션에 싣는다. 이 옵션은 OAuth state 가 아니라 앱 상태라서,
    * 라이브러리가 진행 중 상태와 함께 보관했다가 완료할 때 돌려주고 실패해도 오류에 담아 준다.
    */
-  async authorize(profileId: string, returnTo: string | null): Promise<URL> {
+  async authorize(
+    profileId: string,
+    request: AuthorizeConnectionRequest
+  ): Promise<URL> {
     return this.context.run(profileId, () =>
       this.client.authorize(ENTRYWAY, {
         scope: BLUESKY_SCOPE,
-        state: returnTo ?? undefined,
+        state: request.return_to,
       })
     );
   }
