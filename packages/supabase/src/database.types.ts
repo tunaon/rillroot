@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      channel_app_credentials: {
+        Row: {
+          channel: string
+          client_id: string
+          created_at: string
+          id: string
+          scopes: string
+          secret_id: string
+          server: string
+          updated_at: string
+        }
+        Insert: {
+          channel: string
+          client_id: string
+          created_at?: string
+          id?: string
+          scopes: string
+          secret_id: string
+          server: string
+          updated_at?: string
+        }
+        Update: {
+          channel?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          scopes?: string
+          secret_id?: string
+          server?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       connection_attempts: {
         Row: {
           channel: string
@@ -221,6 +254,10 @@ export type Database = {
         Args: { p_connection_id: string; p_profile_id?: string }
         Returns: boolean
       }
+      read_channel_app_secret: {
+        Args: { p_credential_id: string }
+        Returns: string
+      }
       read_connection_secret: {
         Args: { p_connection_id: string }
         Returns: string
@@ -243,6 +280,16 @@ export type Database = {
           p_title: string
         }
         Returns: boolean
+      }
+      upsert_channel_app_credential: {
+        Args: {
+          p_channel: string
+          p_client_id: string
+          p_scopes: string
+          p_secret: string
+          p_server: string
+        }
+        Returns: string
       }
       upsert_social_connection: {
         Args: {
